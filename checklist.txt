@@ -3,10 +3,10 @@ Steps to configure K8s-Cluster using Ansible Scripts and Kubespray
 Step#1: creating passwordless set up
 login to a secific user and generate ssh public keys
 	$ ssh-keygen -t rsa
-	$ cat .ssh/id_rsa.pub
+	$ cat /home/<user>/.ssh/id_rsa.pub
 login to a 'root' user and generate ssh public keys
 	$ ssh-keygen -t rsa
-	$ cat /root/.ssh/id_rsa.pub\	
+	$ cat /root/.ssh/id_rsa.pub	
 List out the above generated keys and note down to a file.
 Copy the public-key(generated above) into all the machines 
 	$ vi .ssh/authorized_keys
@@ -31,7 +31,7 @@ Run the below commands for virtual setup and run the below commands for settingu
 	>>>>(ansible) opsmxgcetest@cisco-kubemhanfs:
 		
 Install Ansible in the launch machine:
-	$ sh ./ansible-setup.sh 
+	$ sh ansible-setup.sh 
 	or run the following commands in sequence
 	$ sudo apt-get update
 	$ sudo apt-get install -y software-properties-common
