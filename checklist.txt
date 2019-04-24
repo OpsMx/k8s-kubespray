@@ -123,8 +123,20 @@ curl -sLO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd6
 tar xfz helm-v2.13.1-linux-amd64.tar.gz
 sudo mv linux-amd64/helm /usr/local/bin/helm
 
+Ensure the below lines in 'kubespray-install/default/group_vars/k8s-cluster/k8s-cluster.yml'
+	kube_oidc_auth: true
+	kube_oidc_url: https://dex.k8s.example.com:32000
+	kube_oidc_client_id: loginapp
+	kube_oidc_ca_file: "{{ kube_cert_dir }}/ca.pem"
+	kube_oidc_username_claim: name
+	kube_oidc_groups_claim: groups
+	manual_dns_server: 1.1.1.1
+	### Provide API server IPs with Pubic-IPs
+	kube_apiserver_ip: 35.246.52.137 35.234.132.158 35.246.120.230 35.234.158.132
+
+
 Now we can run ansible play book
-	$ansible-playbook -b kubespray/cluster.yml
+	$ansible-playbook -b kubespray/cluster.yml   -- It will take five minutes or more to complete
 	
 
 
