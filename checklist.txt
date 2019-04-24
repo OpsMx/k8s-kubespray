@@ -1,0 +1,129 @@
+Step#1: creating passwordless set up
+login to a secific user and generate ssh public keys
+	$ ssh-keygen -t rsa
+	$ cat .ssh/id_rsa.pub
+login to a 'root' user and generate ssh public keys
+	$ ssh-keygen -t rsa
+	$ cat /root/.ssh/id_rsa.pub\	
+List out the above generated keys and note down to a file.
+Copy the public-key(generated above) into all the machines 
+	$ vi .ssh/authorized_keys
+	$ vi /root/.ssh/authorized_keys
+Test the connectvity among the machines.
+	
+Ansible Installation:
+	In current setup we are using HAProxy system as our launch machine
+
+Step #2: Create Virtual environment and Install Ansible in launch machine
+Run the below commands for virtual setup and run the below commands for settingup virtual environment:
+	$ sudo apt-get update
+	$ sudo apt-get install -y python-pip
+	$ sudo pip install  virtualenv
+	
+	$ virtualenv ~/ansible
+	$ . ~/ansible/bin/activate
+	>>>>(ansible) opsmxgcetest@cisco-kubemhanfs:
+		
+Install Ansible in the launch machine:
+	$ sh ./ansible-setup.sh
+	
+Run the below command in all the machines (Master & Non-master):
+	$ sudo apt-get install -y python	//This is required for ansible connectvity
+	$ sudo apt-get install -y python-netaddr	//This is required for ansible-playbook
+	
+git clone in launch machine:
+	$ git clone https://github.com/kumulustech/kubespray-install
+	
+Perform ssh testing using ansible-playbook
+	copy 'id_rsa' to the location of ssh.yml for checking ssh.
+	$ ansible-playbook kubespray-install/ssh.yml
+
+Perform haproxy testing	using ansible-playbook
+	$ ansible-playbook kubespray-install/haproxy/haproxy.yml
+
+Preparing Kubespray
+	git clone kubespray repository:
+	$ git clone https://github.com/kubespray/kubespray
+
+Edit the below file:
+	kubespray-install/default/group_vars/all/all.yml
+	Update Master & Load Balance IPs with the below keys array:
+	supplementary_addresses_in_ssl_keys		//Public and Private IPs
+	
+Uncomment below lines:
+	loadbalancer_apiserver_localhost: true
+	upstream_dns_servers:
+	- 8.8.8.8
+	cert_management: scrip
+	kube_read_only_port: 10255
+
+Configure 'Enable Ingress Controller Deployment'
+Verify the below things in kubespray-install/default/group_vars/k8s-cluster/addons.yml
+	# Nginx ingress controller deployment
+	ingress_nginx_enabled: true
+	ingress_nginx_host_network: false
+	ingress_nginx_nodeselector:
+	  node-role.kubernetes.io/node: ""
+	
+For addition, enabling 'helm'.
+	helm_enabled: true
+	helm_version: v2.13.1
+	
+edit 'kubespray/roles/kubernetes-apps/ingress-controller/ingress-nginx/templates/svc-default-backend.yml.j2' and ensure the below:
+	labels:
+		app.kubernetes.io/name: ingress-nginx
+		app.kubernetes.io/part-of: ingress-nginx
+	spec:
+	  type: NodePort
+	  ports:
+		- port: 80
+		  targetPort: 80
+	  selector:
+		app.kubernetes.io/name: ingress-nginx
+		app.kubernetes.io/part-of: ingress-nginx
+		
+Note: Kubectl binaries and helm need to be downloaded and set in binary path
+	 for that we following below steps
+## Kubect binary installation
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
+chmod +x ./kubectl
+
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+for helm
+## Helm installation
+
+curl -sLO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+
+tar xfz helm-v2.13.1-linux-amd64.tar.gz
+
+sudo mv linux-amd64/helm /usr/local/bin/helm
+
+Now we can run ansible play book
+	$ansible-playbook -b kubespray/cluster.yml
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
