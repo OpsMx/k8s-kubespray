@@ -88,22 +88,18 @@ Note: Kubectl binaries and helm need to be downloaded and set in binary path
 	 for that we following below steps
 ## Kubect binary installation
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-
 chmod +x ./kubectl
-
 sudo mv ./kubectl /usr/local/bin/kubectl
 
-for helm
 ## Helm installation
-
 curl -sLO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
-
 tar xfz helm-v2.13.1-linux-amd64.tar.gz
-
 sudo mv linux-amd64/helm /usr/local/bin/helm
 
 Now we can run ansible play book
 	$ansible-playbook -b kubespray/cluster.yml
+	
+
 
 
 	
