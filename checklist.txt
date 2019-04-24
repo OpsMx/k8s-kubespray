@@ -61,21 +61,18 @@ Update /etc/ansible/hosts file 	ref : etc-ansible-hosts.txt
 	
 
 git clone in launch machine:
-	$ git clone https://github.com/kumulustech/kubespray-install
+	$ git clone https://github.com/OpsMx/k8s-kubespray
 
 Perform ssh testing using ansible-playbook
 	copy 'id_rsa' to the location of ssh.yml for checking ssh.
-	$ ansible-playbook kubespray-install/ssh.yml
+	$ ansible-playbook k8s-kubespray/kubespray-install/ssh.yml
 
 Perform haproxy testing	using ansible-playbook
-	$ ansible-playbook kubespray-install/haproxy/haproxy.yml
+	$ ansible-playbook k8s-kubespray/kubespray-install/haproxy/haproxy.yml
 
-Preparing Kubespray
-	git clone kubespray repository:
-	$ git clone https://github.com/kubespray/kubespray
 
 Edit the below file:
-	kubespray-install/default/group_vars/all/all.yml
+	k8s-kubespray/kubespray-install/default/group_vars/all/all.yml
 	Update Master & Load Balance IPs with the below keys array:
 	supplementary_addresses_in_ssl_keys		//Public and Private IPs
 	
@@ -87,7 +84,7 @@ Uncomment below lines:
 	kube_read_only_port: 10255
 
 Configure 'Enable Ingress Controller Deployment'
-Verify the below things in kubespray-install/default/group_vars/k8s-cluster/addons.yml
+Verify the below things in k8s-kubespray/kubespray-install/default/group_vars/k8s-cluster/addons.yml
 	# Nginx ingress controller deployment
 	ingress_nginx_enabled: true
 	ingress_nginx_host_network: false
@@ -98,7 +95,7 @@ For addition, enabling 'helm'.
 	helm_enabled: true
 	helm_version: v2.13.1
 	
-edit 'kubespray/roles/kubernetes-apps/ingress-controller/ingress-nginx/templates/svc-default-backend.yml.j2' and ensure the below:
+edit 'k8s-kubespray/kubespray/roles/kubernetes-apps/ingress-controller/ingress-nginx/templates/svc-default-backend.yml.j2' and ensure the below:
 	labels:
 		app.kubernetes.io/name: ingress-nginx
 		app.kubernetes.io/part-of: ingress-nginx
@@ -123,7 +120,7 @@ curl -sLO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd6
 tar xfz helm-v2.13.1-linux-amd64.tar.gz
 sudo mv linux-amd64/helm /usr/local/bin/helm
 
-Ensure the below lines in 'kubespray-install/default/group_vars/k8s-cluster/k8s-cluster.yml'
+Ensure the below lines in 'k8s-kubespray/kubespray-install/default/group_vars/k8s-cluster/k8s-cluster.yml'
 	kube_oidc_auth: true
 	kube_oidc_url: https://dex.k8s.example.com:32000
 	kube_oidc_client_id: loginapp
@@ -136,7 +133,7 @@ Ensure the below lines in 'kubespray-install/default/group_vars/k8s-cluster/k8s-
 
 
 Now we can run ansible play book
-	$ansible-playbook -b kubespray/cluster.yml   -- It will take five minutes or more to complete
+	$ansible-playbook -b k8s-kubespray/kubespray/cluster.yml   -- It will take five minutes or more to complete
 	
 
 
