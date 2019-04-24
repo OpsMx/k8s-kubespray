@@ -12,6 +12,10 @@ Copy the public-key(generated above) into all the machines
 	$ vi .ssh/authorized_keys
 	$ vi /root/.ssh/authorized_keys
 Test the connectvity among the machines.
+	$ ssh -A IPs ( all private IPs, or with hostnames)
+In all machines of /etc/hosts update all master and cluster nodes hostnames with IPs
+In all machines update /etc/hostname file with its Fully Qualified Domain Name ( like kubemaster1.opsmx.com)
+In all machines update /etc/resolve.conf with its DNS server address. ( nameserver < DNS server IP >, search < your domain name > )
 	
 Ansible Installation:
 	In current setup we are using HAProxy system as our launch machine
@@ -27,15 +31,38 @@ Run the below commands for virtual setup and run the below commands for settingu
 	>>>>(ansible) opsmxgcetest@cisco-kubemhanfs:
 		
 Install Ansible in the launch machine:
-	$ sh ./ansible-setup.sh
+	$ sh ./ansible-setup.sh 
+	or run the following commands in sequence
+	$ sudo apt-get update
+	$ sudo apt-get install -y software-properties-common
+	$ sudo apt-add-repository ppa:ansible/ansible
+	$ sudo apt-get update
+	$ sudo apt-get install -y ansible
+	$ sudo apt-get install -y python
+	$ sudo apt-get install -y python-netaddr
+	$ sudo apt-get install -y jinja2
+	or 
+	$ sudo apt-get update
+	$ sudo apt-get install -y software-properties-common
+	$ sudo apt-add-repository ppa:ansible/ansible
+	$ sudo apt-get update
+	$ Sudo apt-get install -y python-pip
+	$ sudo pip install -y ansible
+	$ sudo pip install -y python-netaddr
+	$ sudo pip install -y jinja2
 	
 Run the below command in all the machines (Master & Non-master):
-	$ sudo apt-get install -y python	//This is required for ansible connectvity
-	$ sudo apt-get install -y python-netaddr	//This is required for ansible-playbook
+	$ sudo apt-get update && sudo apt-get install -y python	//This is required for ansible connectvity in all machines
+	$ sudo apt-get update && sudo apt-get install -y python-netaddr	//This is required for ansible-playbook in ansible launch machine
 	
+Update /etc/ansible/hosts file 	ref : etc-ansible-hosts.txt
+	Check all the machines connectivity using ansible ping
+	$ ansible -m ping all -- Or can perform it with individual nodes
+	
+
 git clone in launch machine:
 	$ git clone https://github.com/kumulustech/kubespray-install
-	
+
 Perform ssh testing using ansible-playbook
 	copy 'id_rsa' to the location of ssh.yml for checking ssh.
 	$ ansible-playbook kubespray-install/ssh.yml
@@ -55,7 +82,7 @@ Edit the below file:
 Uncomment below lines:
 	loadbalancer_apiserver_localhost: true
 	upstream_dns_servers:
-	- 8.8.8.8
+	 - 8.8.8.8
 	cert_management: scrip
 	kube_read_only_port: 10255
 
