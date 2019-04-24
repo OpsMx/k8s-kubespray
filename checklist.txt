@@ -1,3 +1,5 @@
+Steps to configure K8s-Cluster using Ansible Scripts and Kubespray
+
 Step#1: creating passwordless set up
 login to a secific user and generate ssh public keys
 	$ ssh-keygen -t rsa
