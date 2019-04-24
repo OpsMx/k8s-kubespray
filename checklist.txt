@@ -145,6 +145,25 @@ Ensure the below lines in 'k8s-kubespray/kubespray-install/default/group_vars/k8
 Now we can run ansible play book
 	$ansible-playbook -b k8s-kubespray/kubespray/cluster.yml   -- It will take five minutes or more to complete
 	
+After cluster completion to test perform the steps below
+	copy content of /etc/kunernetes/admin.conf from master node1 to kubemaster.conf in launch machine
+	Then run the following commands to veryfy the pods and nodes
+	
+	kubectl get node --kubeconfig=kubemaster.conf
+		NAME        STATUS   ROLES         AGE    VERSION
+		kubeubum1   Ready    master        3d7h   v1.13.5
+		kubeubum2   Ready    master,node   3d7h   v1.13.5
+		kubeubum3   Ready    master,node   3d7h   v1.13.5
+	kubectl get namespaces --kubeconfig=kubemaster.conf
+	kubectl get pods --all-namespaces --kubeconfig=kubemaster.conf
+
+
+
+
+
+	
+
+	
 
 
 
