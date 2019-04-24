@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ca
+  namespace: auth
+data:
+  ca.pem: |
+    -----BEGIN CERTIFICATE-----
+    Your CA cert goes here
+    -----END CERTIFICATE-----
