@@ -71,12 +71,22 @@ Perform haproxy testing	using ansible-playbook
 	$ ansible-playbook k8s-kubespray/kubespray-install/haproxy/haproxy.yml
 
 
-Edit the below file:
+Edit the below file: ( Should look like the below )
 	k8s-kubespray/kubespray-install/default/group_vars/all/all.yml
-	Update Master & Load Balance IPs with the below keys array:
-	supplementary_addresses_in_ssl_keys		//Public and Private IPs
+	### Update Master & Load Balance IPs with the below keys array:
+	### supplementary_addresses_in_ssl_keys		//Public and Private IPs
+	ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+	kubeconfig_localhost: true
+	supplementary_addresses_in_ssl_keys: [35.234.132.158,10.154.0.16,10.154.0.17]
 	
-Uncomment below lines:
+	cloud_provider: gce
+	etcd_data_dir: /var/lib/etcd
+	bin_dir: /usr/local/bin
+	
+	loadbalancer_apiserver_localhost: true
+	nginx_kube_apiserver_port: 6443
+	
+
 	loadbalancer_apiserver_localhost: true
 	upstream_dns_servers:
 	 - 8.8.8.8
