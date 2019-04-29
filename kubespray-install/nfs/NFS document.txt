@@ -1,0 +1,67 @@
+steps to install and deploy in k8s cluster using helm
+
+step-1
+Install helm in launch machine
+
+	$curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+
+Create a service account and then bind the cluster-admin role to the service account:
+
+	$kubectl create serviceaccount tiller --namespace kube-system
+	$Kubectl create clusterrolebinding tiller-deploy --clusterrole cluster-admin --serviceaccount kube-system:tiller
+
+And finally install tiller:
+
+	$helm init --service-account tiller
+
+step-2
+
+setup nfs server
+
+Install nfs-kernel-server
+	$sudo apt-get update && sudo apt-get install -y nfs-kernel-server
+create a folder which will be shared among the clients
+	$sudo mkdir -p /home/public
+	$sudo chown nobody:nogroup /home/public
+	$sudo chmod 777 /home/public
+update the folder detail in exports file 
+	$sudo vi /etc/exports
+	/home/public client-ip(rw,sync,no_subtree_check,no_root_squash)
+        It should look like below
+	/home/public 10.0.0.0/8(rw,sync,no_subtree_check,no_root_squash)
+check for exports configuration 
+	$sudo exportfs -a
+	$sudo exportfs
+	The output should look like below
+	/home/public 10.0.0.0/8
+step-3
+
+configure nfs client to check nfs functioning
+Install nfs-common all the master and non master nodes
+	$sudo apt-get update && sudo apt-get install -y nfs-common
+
+check by showmount command in all master and nonmaster nodes 
+	$showmount -e server-ip
+  	It should look like below
+	showmount -e 10.154.0.8
+The output look like 
+	Export list for 10.154.0.8:
+	/home/public 10.0.0.0/8
+
+Repeat step-3 in all master and nonmaster nodes except nfs server .
+
+
+
+step-4
+
+helm install stable/nfs-client-provisioner --name nfs --set nfs.server=10.154.0.8 --set nfs.path=/home/public
+
+On the k8s cluster PVC/PV will be created by the yml file (nfs-claim.yml). Also make sure all master and nonmaster nodes installed with nfs-common.
+
+
+
+
+
+
+
+
