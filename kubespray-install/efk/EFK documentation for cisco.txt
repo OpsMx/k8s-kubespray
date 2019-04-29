@@ -1,0 +1,45 @@
+steps to deploy Elastic and configure K8s to direct logs
+
+step-1
+
+Install helm in launch machine
+
+	$curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+
+Create a service account and then bind the cluster-admin role to the service account:
+
+	$kubectl create serviceaccount tiller --namespace kube-system
+	$Kubectl create clusterrolebinding tiller-deploy --clusterrole cluster-admin --serviceaccount kube-system:tiller
+
+And finally install tiller:
+
+	$helm init --service-account tiller
+
+step-2
+
+Install elastic search operator helm chart
+	$helm repo add es-operator https://raw.githubusercontent.com/upmc-enterprises/elasticsearch-operator/master/charts/
+	$helm install --set rbac.enabled=true --name es-operator --namespace logging es-operator/elasticsearch-operator
+
+Get the custom helm umbrella chart for the EFK configuration and install with the following
+	$wget https://github.com/OpsMx/k8s-kubespray/blob/master/efk-0.0.1.tgz
+	$helm install --name efk --namespace logging efk-0.0.1.tgz
+After installing EFK check by running kubectl get pods -n logging
+	$kubectl get pods -n logging
+The output will look like 
+NAME                                         READY   STATUS    RESTARTS   AGE
+efk-fluent-bit-4qdbd                         1/1     Running   0          7d3h
+efk-fluent-bit-pshlc                         1/1     Running   0          7d3h
+efk-kibana-5f9c56d576-swfcb                  1/1     Running   0          2d22h
+elasticsearch-operator-6b4f5c57dd-v8mrh      1/1     Running   3          2d22h
+es-client-efk-cluster-6c96b94d7d-sq78c       1/1     Running   0          2d22h
+es-data-efk-cluster-nfs-client-0             1/1     Running   0          2d19h
+es-master-efk-cluster-nfs-client-0           1/1     Running   0          2d19h
+prometheus-deployment-76fc6975f8-27fsq       1/1     Running   0          2d22h
+prometheus-deployment-76fc6975f8-sj5rp       1/1     Running   0          2d22h
+
+To view in browser it's recommended either forward efk-kibana service to local host or change clusterIP to NodePort.
+   	Local host forwarding
+	$kubectl port-forward efk-kibana 5601 -n logging
+        or for change clusterIP to NodePort
+	$kubectl patch svc efk-kibana --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "NodePort"}]' -n logging
