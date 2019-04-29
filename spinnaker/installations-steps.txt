@@ -5,6 +5,10 @@ Steps to get kubectl binary in the system to deploy spinnaker
   $ chmod +x ./kubectl
   $ sudo mv ./kubectl /usr/local/bin/kubectl
 
+Download required files
+wget https://github.com/OpsMx/k8s-kubespray/blob/master/spinnaker/minio_template.yml
+wget https://github.com/OpsMx/k8s-kubespray/blob/master/spinnaker/config
+wget https://github.com/OpsMx/k8s-kubespray/blob/master/spinnaker/halyard_template.yml
 
 1.  Create Name space:
 	$ kubectl create namespace <NAME>	//User has to specify the name for namespace <NAME>
