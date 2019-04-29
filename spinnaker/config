@@ -1,0 +1,259 @@
+currentDeployment: default
+deploymentConfigurations:
+- name: default
+  version: 1.11.4
+  providers:
+    appengine:
+      enabled: false
+      accounts: []
+    aws:
+      enabled: false
+      accounts: []
+      bakeryDefaults:
+        baseImages: []
+      defaultKeyPairTemplate: '{{name}}-keypair'
+      defaultRegions:
+      - name: us-west-2
+      defaults:
+        iamRole: BaseIAMRole
+    ecs:
+      enabled: false
+      accounts: []
+    azure:
+      enabled: false
+      accounts: []
+      bakeryDefaults:
+        templateFile: azure-linux.json
+        baseImages: []
+    dcos:
+      enabled: false
+      accounts: []
+      clusters: []
+    dockerRegistry:
+      enabled: true
+      accounts:
+      - name: my-docker-registry
+        requiredGroupMembership: []
+        providerVersion: V1
+        permissions: {}
+        address: {{ dockerrepoaddress }} 
+        username: {{ dockerrepousername }}
+        password: {{ dockerrepopwd }}
+        email: fake.email@spinnaker.io
+        cacheIntervalSeconds: 30
+        clientTimeoutMillis: 60000
+        cacheThreads: 1
+        paginateSize: 100
+        sortTagsByDate: false
+        trackDigests: false
+        insecureRegistry: false
+        repositories:
+        - {{ repositoryname }} // example opsmx11/spinnaker
+      primaryAccount: my-docker-registry
+    google:
+      enabled: false
+      accounts: []
+      bakeryDefaults:
+        templateFile: gce.json
+        baseImages: []
+        zone: us-central1-f
+        network: default
+        useInternalIp: false
+    kubernetes:
+      enabled: true
+      accounts:
+      - name: my-k8s-v2-account
+        requiredGroupMembership: []
+        providerVersion: V2
+        permissions: {}
+        dockerRegistries: []
+        configureImagePullSecrets: true
+        cacheThreads: 1
+        namespaces: [] 
+        omitNamespaces: []
+        kinds: []
+        omitKinds: []
+        customResources: []
+        cachingPolicies: []
+        kubeconfigFile: {{ kubeconfiglocation }} // example - /home/opsmx/.kube/config
+        oauthScopes: []
+        oAuthScopes: []
+        onlySpinnakerManaged: false
+      primaryAccount: my-k8s-v2-account
+    openstack:
+      enabled: false
+      accounts: []
+      bakeryDefaults:
+        baseImages: []
+    oracle:
+      enabled: false
+      accounts: []
+      bakeryDefaults:
+        templateFile: oci.json
+        baseImages: []
+  deploymentEnvironment:
+    size: SMALL
+    type: Distributed
+    accountName: my-k8s-v2-account
+    location: {{ namespace }} //example - spinnaker
+    updateVersions: true
+    consul:
+      enabled: false
+    vault:
+      enabled: false
+    customSizing: {}
+    sidecars: {}
+    gitConfig:
+      upstreamUser: spinnaker
+    haServices:
+      clouddriver:
+        enabled: false
+        disableClouddriverRoDeck: false
+      echo:
+        enabled: false
+  persistentStorage:
+    persistentStoreType: gcs
+    azs: {}
+    gcs: {}
+    redis: {}
+    s3:
+      bucket: spin-front50
+      rootFolder: front50
+      region: us-west-1
+      endpoint: http://minio-service:9000
+      accessKeyId: opsmx123456 {{ specified in the minio configMap}}
+      secretAccessKey: opsmx123456 {{ specified in the minio configMap }}
+    oracle: {}
+  features:
+    auth: false
+    fiat: false
+    chaos: false
+    entityTags: false
+    jobs: true
+    artifacts: true
+    mineCanary: true
+  metricStores:
+    datadog:
+      enabled: false
+      tags: []
+    prometheus:
+      enabled: true
+      add_source_metalabels: true
+    stackdriver:
+      enabled: false
+    period: 30
+    enabled: true
+  notifications:
+    slack:
+      enabled: false
+  timezone: America/Los_Angeles
+  ci:
+    jenkins:
+      enabled: true
+      masters:
+      - name: jenkins-master
+        address: {{ jenkinsaddress }} //example - http://35.211.30.238:8181/jenkins
+        username: {{ jenkinsuser }} //example - opsmx
+        password: {{ jenkinspassword }} // example - Bumblebee@123$
+    travis:
+      enabled: false
+      masters: []
+    wercker:
+      enabled: false
+      masters: []
+  security:
+    apiSecurity:
+      ssl:
+        enabled: false
+      overrideBaseUrl: {{ externalapiurl }} // example - http://spin-gate.company.com
+    uiSecurity:
+      ssl:
+        enabled: false
+      overrideBaseUrl: {{ externaluiurl }} //example - http://spin-deck.company.com
+    authn:
+      oauth2:
+        enabled: false
+        client: {}
+        resource: {}
+        userInfoMapping: {}
+      saml:
+        enabled: false
+      ldap:
+        enabled: false
+        url: {{ ladpurl }} // example - ldaps://ldap.company.com:643
+        userDnPattern: CN={0},CN=Users,dc=local,dc=opsmx,dc=com
+      x509:
+        enabled: false
+      iap:
+        enabled: false
+      enabled: true
+    authz:
+      groupMembership:
+        service: EXTERNAL
+        google:
+          roleProviderType: GOOGLE
+        github:
+          roleProviderType: GITHUB
+        file:
+          roleProviderType: FILE
+        ldap:
+          roleProviderType: LDAP
+      enabled: false
+  artifacts:
+    bitbucket:
+      enabled: true
+      accounts:
+      - name: my-bitbucket-account
+        username: {{ bitbucketuser }} // example - opsmx
+        password: {{ bitbucketpwd }} // spinnakerpwd 
+    gcs:
+      enabled: false
+      accounts: []
+    oracle:
+      enabled: false
+      accounts: []
+    github:
+      enabled: false
+      accounts: []
+    gitlab:
+      enabled: false
+      accounts: []
+    http:
+      enabled: false
+      accounts: []
+    s3:
+      enabled: false
+      accounts: []
+  pubsub:
+    enabled: false
+    google:
+      enabled: false
+      subscriptions: []
+  canary:
+    enabled: false
+    serviceIntegrations:
+    - name: google
+      enabled: false
+      accounts: []
+      gcsEnabled: false
+      stackdriverEnabled: false
+    - name: prometheus
+      enabled: false
+      accounts: []
+    - name: datadog
+      enabled: false
+      accounts: []
+    - name: signalfx
+      enabled: false
+      accounts: []
+    - name: aws
+      enabled: false
+      accounts: []
+      s3Enabled: false
+    reduxLoggerEnabled: true
+    defaultJudge: NetflixACAJudge-v1.0
+    stagesEnabled: true
+    templatesEnabled: true
+    showAllConfigsEnabled: true
+
+
