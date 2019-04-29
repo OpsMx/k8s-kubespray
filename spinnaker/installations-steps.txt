@@ -1,1 +1,66 @@
-re
+First veryfy kubectl binary is available in the system to deploy spinnaker in k8s-cluster.
+Steps to get kubectl binary in the system to deploy spinnaker
+
+  $ curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  $ chmod +x ./kubectl
+  $ sudo mv ./kubectl /usr/local/bin/kubectl
+
+
+1.  Create Name space:
+	$ kubectl create namespace <NAME>	//User has to specify the name for namespace <NAME>
+  	It should look like below
+  $kubectl create namespace dvrns
+  
+2. The following updates are required in the minio_template.yml file
+  Create the Minio Deployment with service and ConfigMap
+  Please make sure you make these changes: 
+            1. Specify the namespace where you want to deploy : namespace is mentioned on deployment, service, configmap
+            2. Please change the username and password on the configmap
+  
+	$ kubectl create -f minio_template.yml -n dvrns
+	deployment.extensions/minio-deployment created
+	service/minio-service created
+	configmap/minio created
+  
+  
+	3.Create a configMap for the Kube config that would be mounted on the Halyard pod
+  kubectl create configmap kubeconfig --from-file=$kube_path -n namespace
+ 	$ kubectl create configmap kubeconfig --from-file=/home/opsmxgcetest/.kube/config -n dvrns
+	  configmap/kubeconfig created
+	
+  4. Create a configMap for the Halyard config that would also be mounted on the Halyard Pod
+        Please make sure you make to substitute the corresponding values where it has been commented on the config file that you have forked. Once done please proceed to create the configMap :
+    $ kubectl create configmap halconfig --from-file=config -n namespace
+  	$ kubectl create configmap halconfig --from-file=config -n dvrns
+		configmap/halconfig created
+    
+  5. Deploy the halyard template 
+       Please make sure you make these changes: 
+        1. Specify the namespace where you want to deploy : namespace is mentioned on deployment & service
+      Deploy Halyard: 
+    $ kubectl create -f halyard_template.yml  
+ 	  $ kubectl create -f halyard_template.yml -n dvrns
+	
+	To check the status...
+	$ kubectl get pod -n dvrns -w
+
+6. 	Entering into spin pod
+  $kubectl exec -it podname /bin/bash -n namespace
+  It will look like below
+	$ kubectl exec -it spin-halyard-74fdfc9cdd-8rg98 /bin/bash -n dvrns
+	$ hal config
+	$ hal version list
+	$ hal config version edit --version 1.13.5
+	$ hal deploy apply
+	
+7. 	$ kubectl patch svc spin-deck --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "NodePort"}]' -n dvrns
+	$ kubectl patch svc spin-gate --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "NodePort"}]' -n dvrns
+		service/spin-deck patched
+	$ kubectl get svc -n dvrns -o wide
+	$ kubectl patch svc spin-gate --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "NodePort"}]' -n dvrns
+		service/spin-gate patched
+
+Troubleshouting for checking pods log
+  $kubectl descrbe podname -n namespace
+  $kubectl logs pdename -n namespace
+
