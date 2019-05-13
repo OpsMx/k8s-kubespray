@@ -1,0 +1,115 @@
+	
+	$ opsmxgcetest@kubeubumnfs:~/Prometheus-setup/Grafana$ kubectl create -f grafana-deployment.yaml -n monitoring
+		deployment.apps/grafana created		
+	$ kubectl delete -f grafana-deployment.yaml -n monitoring
+	
+	$ kubectl create -f grafana-service.yaml -n monitoring
+	$ kubectl delete -f grafana-service.yaml --namespace=monitoring
+==================================================================================================
+Install Stable:
+---------------
+https://grafana.com/docs/installation/debian/
+https://www.howtoforge.com/tutorial/ubuntu-grafana-monitoring/
+https://grafana.com/grafana/download?platform=linux&utm_campaign=v6&utm_source=blog
+	$ wget https://dl.grafana.com/oss/release/grafana_6.1.6_amd64.deb
+	$ sudo dpkg -i grafana_6.1.6_amd64.deb 
+Install the repository for stable releases	
+	$ sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
+There is a separate repository if you want beta releases:
+	$ sudo add-apt-repository "deb https://packages.grafana.com/oss/deb beta main"
+	
+	$ curl https://packages.grafana.com/gpg.key | sudo apt-key add -
+	$ sudo apt-get update
+	$ sudo apt-get install grafana
+
+On some older versions of Ubuntu and Debian you may need to install the apt-transport-https package which is needed to fetch packages over HTTPS.
+	$ sudo apt-get install -y apt-transport-https
+===================================================================================================
+helm install --name myprometheus --namespace monitoring stable/prometheus -f values.yaml
+helm install --name grafana --namespace monitoring stable/grafana -f values.yaml
+
+======================================================================================================
+https://sysdig.com/blog/kubernetes-monitoring-with-prometheus-alertmanager-grafana-pushgateway-part-2/
+
+opsmxgcetest@kubeubumnfs:~$ helm install --name mygrafana stable/grafana --set sidecar.datasources.enabled=true --set sidecar.dashboards.enabled=true --set sidecar.datasources.label=grafana_datasource --set sidecar.dashboards.label=grafana_dashboard
+NAME:   mygrafana
+LAST DEPLOYED: Tue May  7 05:02:34 2019
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/ClusterRole
+NAME                   AGE
+mygrafana-clusterrole  0s
+
+==> v1/ClusterRoleBinding
+NAME                          AGE
+mygrafana-clusterrolebinding  0s
+
+==> v1/ConfigMap
+NAME                         DATA  AGE
+mygrafana                    1     0s
+mygrafana-config-dashboards  1     0s
+mygrafana-test               1     0s
+
+==> v1/Pod(related)
+NAME                        READY  STATUS    RESTARTS  AGE
+mygrafana-7655f98f99-276sh  0/2    Init:0/1  0         0s
+
+==> v1/Secret
+NAME       TYPE    DATA  AGE
+mygrafana  Opaque  3     0s
+
+==> v1/Service
+NAME       TYPE       CLUSTER-IP     EXTERNAL-IP  PORT(S)  AGE
+mygrafana  ClusterIP  10.233.34.143  <none>       80/TCP   0s
+
+==> v1/ServiceAccount
+NAME       SECRETS  AGE
+mygrafana  1        0s
+
+==> v1beta1/PodSecurityPolicy
+NAME       PRIV   CAPS      SELINUX   RUNASUSER  FSGROUP   SUPGROUP  READONLYROOTFS  VOLUMES
+mygrafana  false  RunAsAny  RunAsAny  RunAsAny   RunAsAny  false     configMap,emptyDir,projected,secret,downwardAPI,persistentVolumeClaim
+
+==> v1beta1/Role
+NAME       AGE
+mygrafana  0s
+
+==> v1beta1/RoleBinding
+NAME       AGE
+mygrafana  0s
+
+==> v1beta2/Deployment
+NAME       READY  UP-TO-DATE  AVAILABLE  AGE
+mygrafana  0/1    1           0          0s
+
+
+NOTES:
+1. Get your 'admin' user password by running:
+
+   kubectl get secret --namespace default mygrafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+2. The Grafana server can be accessed via port 80 on the following DNS name from within your cluster:
+
+   mygrafana.default.svc.cluster.local
+
+   Get the Grafana URL to visit by running these commands in the same shell:
+
+     export POD_NAME=$(kubectl get pods --namespace default -l "app=grafana,release=mygrafana" -o jsonpath="{.items[0].metadata.name}")
+     kubectl --namespace default port-forward $POD_NAME 3000
+
+3. Login with the password from step 1 and the username: admin
+#################################################################################
+######   WARNING: Persistence is disabled!!! You will lose your data when   #####
+######            the Grafana pod is terminated.                            #####
+#################################################################################
+
+==========================================================================================================================================
+opsmxgcetest@kubeubumnfs:~$ kubectl get secret --namespace default mygrafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+	dufeDgn2ylo1TGxlpNWSsARgQAc04uQFr9hrItXn
+
+opsmxgcetest@kubeubumnfs:~$ kubectl port-forward mygrafana-7655f98f99-276sh 3000:3000
+	Forwarding from 127.0.0.1:3000 -> 3000
+	Forwarding from [::1]:3000 -> 3000
+

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    #app.kubernetes.io/part-of: ingress-nginx
+
+spec:
+  ports:
+    - port: 3000
+      protocol: TCP
+      targetPort: 3000
+      nodePort: 31716
+  selector:
+    app.kubernetes.io/name: grafana
+    #app.kubernetes.io/part-of: ingress-nginx
+  type: NodePort
