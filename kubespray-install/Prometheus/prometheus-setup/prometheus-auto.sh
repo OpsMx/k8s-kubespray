@@ -1,5 +1,5 @@
 #!/bin/bash
-minion_list=("x.x.x.x" "x.x.x.x" "x.x.x.x" "x.x.x.x")
+node_list=("x.x.x.x" "x.x.x.x" "x.x.x.x" "x.x.x.x")
 user_names=("username" "username" "username" "username")
 
 # This is required to be executed for each minion node.
@@ -120,5 +120,5 @@ fi
 echo "Installed Prometheus successfully"
 
 echo "Started installing node_exporter on each minion node ..."
-install_nodeexporter minion_list user_names
+install_nodeexporter node_list user_names
 echo "Installed node_exporter successfully"
