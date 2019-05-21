@@ -82,8 +82,8 @@ read -r nfs_server_ip
 helm install stable/nfs-client-provisioner --name nfs --set nfs.server=$nfs_server_ip --set nfs.path=$nfsfolder
 echo ".......... NFS Server configutaion with nfs-client provisioning is sucessfully completed in k8s-cluster......"
 
-node_list=("x.x.x.x" "x.x.x.x" "x.x.x.x" "x.x.x.x")
-user_names=("username" "username" "username" "username")
+node_list=("x.x.x.x" "x.x.x.x" "x.x.x.x")
+user_names=("username" "username" "username")
 
 # This is required to be executed for each minion node.
 function nfs_client() {
