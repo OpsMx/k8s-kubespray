@@ -1,0 +1,33 @@
+---
+- hosts: all
+  tasks:
+  - name: Install wget package
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items: ["wget","tar"]
+  - name: Downloading from http(Internet).
+    get_url:
+      url: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: ~/
+  - name: Unarchive a file that is already on the remote machine
+    unarchive:
+      src: ~/node_exporter-0.17.0.linux-amd64.tar.gz
+      dest: ~/
+  - name: copying node_exporter to /usr/local/bin location
+    copy:
+      src: ~/node_exporter-0.17.0.linux-amd64/node_exporter
+      dest: /usr/local/bin/node_exporter
+      mode: '0755'
+    become: true
+  - name: "Creating unit file for node_exporter service"
+    template:
+      src: node_exporter.service.j2
+      dest: /etc/systemd/system/node_exporter.service
+    become: true
+  - name: Reload systemctl ...
+    command: systemctl daemon-reload
+    become: true
+  - name: "starting node_exporter service ..."
+    command: systemctl start node_exporter
+    become: true
