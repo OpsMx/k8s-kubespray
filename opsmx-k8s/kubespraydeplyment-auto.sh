@@ -52,7 +52,7 @@ ansible-playbook -b k8s-kubespray/kubespray/cluster.yml
 echo ".. Wait for completion of deployment...."
 
 echo ".. Copy kubeconfig file from master1 to launch machine ....."
-read -f master1_ip
+read -r master1_ip
 sudo scp $master1_ip:/etc/kubernetes/admin.conf .
 sudo mv admin.conf config
 sudo mkdir ~/.kube
