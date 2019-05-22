@@ -88,7 +88,7 @@ else
 fi
 
 echo "Getting the custom helm umbrella chart for the EFK configuration and install with the following"
-$wget https://github.com/OpsMx/k8s-kubespray/blob/master/efk-0.0.1.tgz
+wget https://github.com/OpsMx/k8s-kubespray/blob/master/efk-0.0.1.tgz
 if test $status -eq 0
 then
   echo "Downloaded the custom helm umbrella chart successfully"
@@ -96,7 +96,7 @@ else
   echo "Failed to download the custom helm umbrella chart!"
 fi
 
-$helm install --name efk --namespace $namespace efk-0.0.1.tgz
+helm install --name efk --namespace $namespace efk-0.0.1.tgz
 if test $status -eq 0
 then
   echo "Installed the custom helm umbrella chart successfully"
@@ -105,7 +105,7 @@ else
 fi
 
 echo "Forwarding efk-kibana service to local host ..."
-kubectl port-forward efk-kibana 5601 -n logging
+kubectl port-forward efk-kibana 5601 -n $namespace
 if test $status -eq 0
 then
   echo "Forwarded efk-kibana service to local host successfully"
