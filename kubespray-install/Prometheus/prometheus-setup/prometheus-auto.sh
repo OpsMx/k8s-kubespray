@@ -119,6 +119,6 @@ else
 fi
 echo "Installed Prometheus successfully"
 
-echo "Started installing node_exporter on each minion node ..."
-install_nodeexporter node_list user_names
-echo "Installed node_exporter successfully"
+#echo "Started installing node_exporter on each minion node ..."
+#install_nodeexporter node_list user_names
+#echo "Installed node_exporter successfully"
