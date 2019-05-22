@@ -56,7 +56,7 @@ read -f master1_ip
 sudo scp $master1_ip:/etc/kubernetes/admin.conf .
 sudo mv admin.conf config
 sudo mkdir ~/.kube
-sudo mv conf ~/.kube/config
+sudo mv config ~/.kube/config
 read -r username
 sudo chown $suername:$username ~/.kube/config
 
