@@ -34,9 +34,9 @@ echo " .......Checking helm binary available in the system/node to deploy spinna
 if [ -x /usr/local/bin/helm ]; then
 	echo " helm binary is available for the further process"
 else
-	echo " helm is not installed .. System starts to install kubectl binary.."
+	echo " helm is not installed .. System starts to install helm binary.."
 	
-	echo " .......Downloading helm binary from kubernetes-release..."
+	echo " .......Downloading helm binary ..."
 	curl -sLO https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
 
 	echo " .......Untaring the helm gz..."
