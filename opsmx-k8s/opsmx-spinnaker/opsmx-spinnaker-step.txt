@@ -1,0 +1,18 @@
+Step1: Create persistance volume by pv.yml
+Step2: Execute the script opsmx-k8s-spinnaker-auto.sh 
+Step3: Run the following commands
+  $ kubectl exec -it $spin_pod /bin/bash -n $spinnaker_namespace
+  $ hal config
+  $ hal version list
+	$ hal config version edit --version 1.13.5
+	$ hal deploy apply
+Step 4: Run the following commands to expose outside using NodePort
+  $ kubectl patch svc spin-deck --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "NodePort"}]' -n $spinnaker_namespace
+	$ kubectl get svc -n $spinnaker_namespace -o wide
+	$ kubectl patch svc spin-gate --type='json' -p='[{"op": "replace", "path": "/spec/type", "value": "NodePort"}]' -n $spinnaker_namespace
+		service/spin-gate patched
+
+Steps5: Troubleshouting to check pods log
+  $kubectl descrbe podname -n $spinnaker_namespace
+  $kubectl logs pdename -n $spinnaker_namespace
+
