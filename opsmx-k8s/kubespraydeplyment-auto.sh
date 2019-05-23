@@ -52,12 +52,12 @@ ansible-playbook -b k8s-kubespray/kubespray/cluster.yml
 echo ".. Wait for completion of deployment...."
 
 echo ".. Copy kubeconfig file from master1 to launch machine ....."
-read -r master1_ip
+read -p "  [****] Enter the Namespace where you want to Deploy Spinnaker and related services :" master1_ip
 sudo scp $master1_ip:/etc/kubernetes/admin.conf .
 sudo mv admin.conf config
 sudo mkdir ~/.kube
 sudo mv config ~/.kube/config
-read -r username
+read -p "  [****] Enter the Namespace where you want to Deploy Spinnaker and related services :" username
 sudo chown $suername:$username ~/.kube/config
 
 echo ".. Verifying deployment of k8s-cluster from launch machine ....."
