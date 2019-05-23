@@ -1,7 +1,7 @@
 currentDeployment: default
 deploymentConfigurations:
 - name: default
-  version: spinnaker-version
+  version: SPINNAKER-VERSION
   providers:
     appengine:
       enabled: false
@@ -37,8 +37,8 @@ deploymentConfigurations:
         providerVersion: V1
         permissions: {}
         address: https://index.docker.io 
-        username: docker-username
-        password: docker-password
+        username: DOCKER-USERNAME
+        password: DOCKER-PASSWORD
         email: fake.email@spinnaker.io
         cacheIntervalSeconds: 30
         clientTimeoutMillis: 60000
@@ -48,7 +48,7 @@ deploymentConfigurations:
         trackDigests: false
         insecureRegistry: false
         repositories:
-        - docker-repository-name
+        - DOCKER-REPOSITORY-NAME
       primaryAccount: my-docker-registry
     google:
       enabled: false
@@ -95,7 +95,7 @@ deploymentConfigurations:
     size: SMALL
     type: Distributed
     accountName: my-k8s-v2-account
-    location: dvrns
+    location: SPINNAKER_NAMESPACE
     updateVersions: true
     consul:
       enabled: false
@@ -121,8 +121,8 @@ deploymentConfigurations:
       rootFolder: front50
       region: us-west-1
       endpoint: http://minio-service:9000
-      accessKeyId: minio-id
-      secretAccessKey: minio-passwd
+      accessKeyId: MINIO-USER
+      secretAccessKey: MINIO-PASSWORD
     oracle: {}
   features:
     auth: false
@@ -151,10 +151,10 @@ deploymentConfigurations:
     jenkins:
       enabled: false
       masters: 
-      - name: jenkins-master
+      - name: JENKINS-NAME
         address: 
-        username: jenkin-username
-        password: jenkin-password
+        username: JENKIN-USER
+        password: JENKIN-PASSWORD
     travis:
       enabled: false
       masters: []
