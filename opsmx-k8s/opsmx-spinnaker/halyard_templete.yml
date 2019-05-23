@@ -1,0 +1,71 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: spin-halyard
+  namespace: namespace 
+  labels:
+    app: spin
+    stack: halyard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spin
+      stack: halyard
+  template:
+    metadata:
+      labels:
+        app: spin
+        stack: halyard
+    spec:
+      containers:
+      - name: halyard-daemon
+        # todo - make :stable or digest of :stable
+        image: gcr.io/spinnaker-marketplace/halyard:stable 
+        imagePullPolicy: Always
+        command:
+        - /bin/sh
+        args:
+        - -c
+        - "cp -R /home/spinnaker/staging/.hal /home/spinnaker/.hal && cp -R /home/spinnaker/staging/.kube /home/spinnaker/.kube && /opt/halyard/bin/halyard"
+        readinessProbe:
+          exec:
+            command:
+            - wget
+            - -q
+            - --spider
+            - http://localhost:8064/health
+        ports:
+        - containerPort: 8064
+        volumeMounts:
+        - name: halconfig
+          mountPath: /home/spinnaker/staging/.hal/config
+          subPath: config
+        - name: kubeconfig
+          mountPath: /home/spinnaker/staging/.kube/config
+          subPath: config
+      volumes:
+      - name: halconfig
+        configMap:
+          defaultMode: 420
+          name: halconfig
+      - name: kubeconfig
+        configMap:
+          defaultMode: 420
+          name: kubeconfig
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spin-halyard
+  namespace: namespace
+spec:
+  ports:
+    - port: 8064
+      targetPort: 8064
+      protocol: TCP
+  selector:
+    app: spin
+    stack: halyard
+  type: ClusterIP
