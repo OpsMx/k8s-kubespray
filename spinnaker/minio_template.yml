@@ -3,7 +3,7 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: minio-deployment
-  namespace: namespace
+  namespace: SPINNAKER_NAMESPACE
 spec:
   strategy:
     type: Recreate
@@ -36,7 +36,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: minio-service
-  namespace: namespace
+  namespace: SPINNAKER_NAMESPACE
 spec:
   ports:
     - port: 9000
@@ -51,7 +51,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: minio
-  namespace: namespace
+  namespace: SPINNAKER_NAMESPACE
 data:
   username: opsmx123456
   password: opsmx123456
