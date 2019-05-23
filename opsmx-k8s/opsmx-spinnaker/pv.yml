@@ -1,0 +1,13 @@
+apiVersion: "v1"
+kind: "PersistentVolume"
+metadata:
+  name: pv_claim_name
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - "ReadWriteOnce"
+  nfs:
+    path: /home/public/pv_claim_name
+    server: nfs_server_ip
+  persistentVolumeReclaimPolicy: "Recycle"
