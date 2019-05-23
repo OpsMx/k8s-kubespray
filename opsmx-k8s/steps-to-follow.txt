@@ -31,13 +31,18 @@ In all machines update /etc/hostname file with its Fully Qualified Domain Name (
 In all machines update /etc/resolv.conf with its DNS server address. ( nameserver < DNS server IP >, search < your domain name > )
 
 Step2: Execute kubesprayenv.sh script in launch machine then check setting into virtualenv for ansible setup
+Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubesprayenv.sh
 	$ virtualenv ~/ansible
 	$ . ~/ansible/bin/activate
 	>>>>(ansible) opsmxgcetest@cisco-kubemhanfs:
 		
 Step3: Install ansible 2.7.10 using pip in virtual environment
-
-Step4: Update /etc/ansible/hosts file 	ref : etc-ansible-hosts.txt
+	$ sudo pip install ansible==2.7.10
+	$ which ansible
+	$ export PATH=$PATH:/usr/local/bin/ansible
+	
+Step4: Update /etc/ansible/hosts file ref: sample_etc_hosts
+Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/sample_etc_hosts
 	   Check all the machines connectivity using ansible ping
 	$ ansible -m ping all -- Or can perform it with individual nodes
 	
@@ -49,7 +54,7 @@ Edit the below file: ( Should look like the below )
 	### supplementary_addresses_in_ssl_keys		//Public and Private IPs
 	ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
 	kubeconfig_localhost: true
-	supplementary_addresses_in_ssl_keys: [35.234.132.158,10.154.0.16,10.154.0.17]
+	supplementary_addresses_in_ssl_keys: [masternode1_ip masternode2_privateIP masternode3_privateIP]
 	
 	cloud_provider: gce
 	etcd_data_dir: /var/lib/etcd
@@ -102,16 +107,57 @@ Ensure the below lines in 'k8s-kubespray/kubespray-install/default/group_vars/k8
 	kube_oidc_groups_claim: groups
 	manual_dns_server: 1.1.1.1
 	### Provide API server IPs with Pubic-IPs
-	kube_apiserver_ip: 35.246.52.137 35.234.132.158 35.246.120.230 35.234.158.132
+	kube_apiserver_ip: Public IPs of launch and all kube systems IP ( 35.234.23.5 )
 
 Step6: Execute Kubespraydeployment-auto.sh script and wait for completion
+Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubespraydeplyment-auto.sh
 		
 Step7: Execute nfs-auto.sh script and wait for completion
+https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/nfs-auto.sh
+	$ bash nfs-auto.sh
 
-Step8: Execute efk-auto.sh script and wait for completion
+Step8: Execute efk-installer.sh script and wait for completion
+Source: https://github.com/OpsMx/k8s-kubespray/blob/master/kubespray-install/efk/efk-installer.sh
+	$ bash efk-installer.sh
 
-Step9: Execute Prometheous-auto.sh script and wait for completion
+Step9: For Prometheous installtion follow the steps 
+Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Prometheus/prometheus-setup
+Scripts:
+	1. prometheus-auto.sh (Executable file)
+	2. clusterRole.yml
+	3. config-map.yml
+	4. prometheus-deployment.yml
+	5. prometheus-service.yml
+Note: 
+	1. Update master and minion node IPs and their usernames in 'prometheus-auto.sh'.
+	2. Update 'config-map.yml' with the below entry:
+		- job_name: 'node1'
+		  static_configs:
+			- targets: ['x.x.x.x:9100'] -- update x.x.x.x with cluster private IPs
+Command:
+	$ bash prometheus-auto.sh
 
-Step10: Follow spinnaker installtion step and script
+Step10: Node-Exporter for infrastrucure metrics
+Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Prometheus/prometheus-setup
+Scripts:
+	1. node-exporter.yaml (Executable file)
+	2. k8s-hosts
+	2. node_exporter.service.j2
+Note: 
+	1. Ensure the inventory file 'k8s-hosts' with the hostnames of master and minion nodes.
+Command:
+	$ ansible-playbook -i k8s-hosts node-exporter.yaml
+	
+Step11: Grafana
+Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Grafana/grafana-setup
+Scripts:
+	1. grafana-auto.sh (Executable file)
+	2. grafana-deployment.yml
+	3. grafana-service.yml
+Command: 
+	$ bash grafana-auto.sh
+	
+Step12: Follow spinnaker installation step and script
+Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
 
-Step11: Verify and Confirm status
+Step13: Verify and Confirm status
