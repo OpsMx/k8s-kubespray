@@ -3,8 +3,8 @@
 #### Organization : OpsMX
 #### Author : M Gnana Seelan
 
-node_list=("x.x.x.x" "x.x.x.x" "x.x.x.x" "x.x.x.x")
-user_names=("username" "username" "username" "username")
+node_list=("x.x.x.x" "x.x.x.x" "x.x.x.x")
+user_names=("username" "username" "username")
 
 # This is required to be executed for each minion node.
 function nfs_client() {
