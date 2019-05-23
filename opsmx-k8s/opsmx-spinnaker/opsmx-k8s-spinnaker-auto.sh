@@ -74,7 +74,7 @@ sed -i "s/base64convertedaccesskey/$base1/" minio_template.yml
 sed -i "s/base64convertedSecretAccesskey/$base2/" minio_template.yml
 sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" minio_template.yml
 
-echo "Started creating ConfigMap for minio in the name-space $spinnaker_namespace"
+echo "Started creating ConfigMap for minio in the namespace $spinnaker_namespace"
 kubectl create -f minio_template.yml -n $spinnaker_namespace  
 status=$?
 if test $status -eq 0
@@ -86,7 +86,7 @@ else
 	echo "Failed to create the minio deployment, service and ConfigMap!"
   #exit
 fi
-
+sleep 30
 echo " Minio Pod status Checking"
 kubectl get pod -n $spinnaker_namespace >> miniopod.txt
 minio_pod=$(cat miniopod.txt | grep minio | awk '{print $1}')
@@ -115,8 +115,7 @@ fi
 
 # Create a configMap for the Kube config that would be mounted on the Halyard pod
 echo "Started Create a configMap for the Kube config that would be mounted on the Halyard pod"
-echo "Provide kube config file full path with kube config file (~/.kube/config):  "
-read -r kube_path
+read -p  "Provide kube config file full path with kube config file (~/.kube/config):  " kube_path
 kubectl create configmap kubeconfig --from-file=$kube_path -n $spinnaker_namespace
 status=$?
 if test $status -eq 0
@@ -179,6 +178,7 @@ else
 fi
 
 echo " Checking deployment of pods in the created name space"
+sleep 55
 kubectl get pod -n $spinnaker_namespace >> spinpod.txt
 echo " Wait untill the halyard pod is with Running status and 1/1 Ready"
 
