@@ -1,4 +1,4 @@
-Step1: Create persistance volume by pv.yml
+Step1: Create persistance volume by pv.yml. pv.yml need to be update will pv_claim_name(mini-claim),shared folder, (/home/public/pv_claim_name) and NFS server ip ( 10.170.0.16)
 Step2: Execute the script opsmx-k8s-spinnaker-auto.sh 
 Step3: Run the following commands
   $ kubectl exec -it $spin_pod /bin/bash -n $spinnaker_namespace
