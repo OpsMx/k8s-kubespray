@@ -35,6 +35,8 @@ wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnake
 echo " .......Downloading halyard templete file from OpsMx git repository using wget..."
 wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/halyard_template.yml
 
+echo " .......Downloading persistance volume file from OpsMx git repository using wget..."
+wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/pv.yml
 
 echo "Deploying Minio ..."
 echo "Enter the namespace"
