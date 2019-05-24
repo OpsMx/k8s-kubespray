@@ -16,7 +16,9 @@ sudo apt-add-repository ppa:ansible/ansible
 echo " .... Installing ansible on the machine to initiate kubespray .........."
 sudo apt-get update && sudo apt-get install -y ansible python-netaddr 
 sudo apt-get update && sudo apt-get install -y python-pip  virtualenv
-sudo pip install ansible python-netaddr python-jinja2
+sudo pip install ansible 
+sudo pip install python-netaddr 
+sudo pip install python-jinja2
 
 
 
