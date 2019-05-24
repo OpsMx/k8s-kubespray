@@ -92,19 +92,23 @@ sudo chown nobody:nogroup $nfsfolder
 sudo chmod 777 $nfsfolder
 echo ".......... Updating the exports file with nfs share folder details ......"
 # sudo su
-sudo echo '$nfsfolder $nfs_share_iprange(rw,sync,no_subtree_check,no_root_squash)' >> /etc/exports
+sudo echo "$nfsfolder $nfs_share_iprange(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
 # exit
 echo ".......... Checking the NFS configuration details ......"
 sudo exportfs -a	
 sudo exportfs
 echo ".......... NFS Server configutaion sucessfully completed ......"
 
+echo ".......... NFS client provisioning setup in the k8s-cluster ......"
+read -p  " Enter NFS server ip ( example : 10.165.0.56 ): " nfs_server_ip
+
+
+
 echo "Started installing nfs-common on each nfs-client ..."
 nfs_client node_list
 echo "Installed nfs_client successfully"
 
-echo ".......... NFS client provisioning setup in the k8s-cluster ......"
-read -p  " Enter NFS server ip ( example : 10.165.0.56 ): " nfs_server_ip
+
 echo " Installing nfs client provisioner in k8s cluster"
 helm install stable/nfs-client-provisioner --name nfs --set nfs.server=$nfs_server_ip --set nfs.path=$nfsfolder
 echo ".......... NFS Server configutaion with nfs-client provisioning is sucessfully completed in k8s-cluster......"
