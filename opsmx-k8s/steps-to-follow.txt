@@ -30,23 +30,30 @@ In all machines of /etc/hosts update all master and cluster nodes hostnames with
 In all machines update /etc/hostname file with its Fully Qualified Domain Name ( like kubemaster1.opsmx.com)
 In all machines update /etc/resolv.conf with its DNS server address. ( nameserver < DNS server IP >, search < your domain name > )
 
-Step2: Execute kubesprayenv.sh script in launch machine then check setting into virtualenv for ansible setup
+Step2: Do git clone opsmx git repo
+Execute command : git clone https://github.com/OpsMx/k8s-kubespray
+
+Step3: Execute kubesprayenv.sh script in launch machine then check setting into virtualenv for ansible setup
+Note: update node lists with Private IPs of masters and worker nodes
+Command : sudo bash k8s-kubespray/opsmx-k8s/kubesprayenv.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubesprayenv.sh
+Setup Virtual environment to execute ansible
 	$ virtualenv ~/ansible
 	$ . ~/ansible/bin/activate
 	>>>>(ansible) opsmxgcetest@cisco-kubemhanfs:
 		
-Step3: Install ansible 2.7.10 using pip in virtual environment
+Step4: Install ansible 2.7.10 using pip in virtual environment
 	$ sudo pip install ansible==2.7.10
 	$ which ansible
 	$ export PATH=$PATH:/usr/local/bin/ansible
 	
-Step4: Update /etc/ansible/hosts file ref: sample_etc_hosts
-Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/sample_etc_hosts
+Step5: Update /etc/ansible/hosts file ref: sample_etc_hosts
+Source: k8s-kubespray/opsmx-k8s/opsmx-spinnaker/sample_etc_hosts
 	   Check all the machines connectivity using ansible ping
-	$ ansible -m ping all -- Or can perform it with individual nodes
+	$ ansible -m ping <each node> -- Or can perform it with individual nodes : user will be prompted for acceptance. 
+	$ ansible -m ping all
 	
-Step5: Follow configuration of all the files as below
+Step6: Follow configuration of all the files as below
 File1:
 Edit the below file: ( Should look like the below )
 	k8s-kubespray/kubespray-install/default/group_vars/all/all.yml
@@ -99,28 +106,23 @@ edit 'k8s-kubespray/kubespray/roles/kubernetes-apps/ingress-controller/ingress-n
 
 File4:
 Ensure the below lines in 'k8s-kubespray/kubespray-install/default/group_vars/k8s-cluster/k8s-cluster.yml'
-	kube_oidc_auth: true
-	kube_oidc_url: https://dex.k8s.example.com:32000
-	kube_oidc_client_id: loginapp
-	kube_oidc_ca_file: "{{ kube_cert_dir }}/ca.pem"
-	kube_oidc_username_claim: name
-	kube_oidc_groups_claim: groups
 	manual_dns_server: 1.1.1.1
 	### Provide API server IPs with Pubic-IPs
 	kube_apiserver_ip: Public IPs of launch and all kube systems IP ( 35.234.23.5 )
 
-Step6: Execute Kubespraydeployment-auto.sh script and wait for completion
+Step7: Execute Kubespraydeployment-auto.sh script and wait for completion
+command : sudo sh k8s-kubespray/opsmx-k8s/kubespraydeplyment-auto.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubespraydeplyment-auto.sh
 		
-Step7: Execute nfs-auto.sh script and wait for completion
+Step8: Execute nfs-auto.sh script and wait for completion
 https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/nfs-auto.sh
 	$ bash nfs-auto.sh
 
-Step8: Execute efk-installer.sh script and wait for completion
+Step9: Execute efk-installer.sh script and wait for completion
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/kubespray-install/efk/efk-installer.sh
 	$ bash efk-installer.sh
 
-Step9: For Prometheous installtion follow the steps 
+Step10: For Prometheous installtion follow the steps 
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Prometheus/prometheus-setup
 Scripts:
 	1. prometheus-auto.sh (Executable file)
@@ -137,7 +139,7 @@ Note:
 Command:
 	$ bash prometheus-auto.sh
 
-Step10: Node-Exporter for infrastrucure metrics
+Step11: Node-Exporter for infrastrucure metrics
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Prometheus/prometheus-setup
 Scripts:
 	1. node-exporter.yaml (Executable file)
@@ -148,7 +150,7 @@ Note:
 Command:
 	$ ansible-playbook -i k8s-hosts node-exporter.yaml
 	
-Step11: Grafana
+Step12: Grafana
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Grafana/grafana-setup
 Scripts:
 	1. grafana-auto.sh (Executable file)
@@ -157,7 +159,7 @@ Scripts:
 Command: 
 	$ bash grafana-auto.sh
 	
-Step12: Follow spinnaker installation step and script
+Step13: Follow spinnaker installation step and script
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
 
 Step13: Verify and Confirm status
