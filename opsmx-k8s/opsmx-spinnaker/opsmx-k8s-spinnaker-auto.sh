@@ -72,12 +72,12 @@ printf '\n'
 base1=$(echo -ne "$access_key" |base64)
 base2=$(echo -ne "$secret_access_key" |base64)
 printf "\n   [****]  Fetching and Updating the Minio Secret [****] "
-sed -i "s/base64convertedaccesskey/$base1/" minio_template.yml
-sed -i "s/base64convertedSecretAccesskey/$base2/" minio_template.yml
-sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" minio_template.yml
+sed -i "s/base64convertedaccesskey/$base1/" minio_templete.yml
+sed -i "s/base64convertedSecretAccesskey/$base2/" minio_templete.yml
+sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" minio_templete.yml
 
 echo "Started creating ConfigMap for minio in the namespace $spinnaker_namespace"
-kubectl create -f minio_template.yml -n $spinnaker_namespace  
+kubectl create -f minio_templete.yml -n $spinnaker_namespace  
 status=$?
 if test $status -eq 0
 then
@@ -167,9 +167,9 @@ fi
 
 echo "Started Configuring halyard templete file "
 
-sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" halyard_template.yml
+sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" halyard_templete.yml
 
-kubectl create -f halyard_template.yml -n $spinnaker_namespace
+kubectl create -f halyard_templete.yml -n $spinnaker_namespace
 status=$?
 if test $status -eq 0
 then
