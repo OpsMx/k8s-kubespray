@@ -18,8 +18,6 @@ sudo apt-get update && sudo apt-get install -y ansible python-netaddr
 sudo apt-get update && sudo apt-get install -y python-pip  virtualenv
 sudo pip install -y ansible python-netaddr python-jinja2
 
-echo ".. Performing git clone in launch machine....." >> /dev/null 2>&1
-git clone https://github.com/OpsMx/k8s-kubespray
 
 
 	
