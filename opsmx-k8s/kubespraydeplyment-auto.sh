@@ -7,10 +7,10 @@
 #### Ansible Installation: In current setup we are using HAProxy system as our launch machine
 
 echo".. Performing ssh testing from launch machine....."
-ansible-playbook -b k8s-kubespray/kubespray-install/ssh.yml
+ansible-playbook k8s-kubespray/kubespray-install/ssh.yml
 
 echo".. Performing haproxy testing from launch machine....."
-ansible-playbook -b k8s-kubespray/kubespray-install/haproxy/haproxy.yml
+ansible-playbook k8s-kubespray/kubespray-install/haproxy/haproxy.yml
 
 ## Kubect binary installation
 echo " .......Checking kubectl binary available in the system/node to deploy spinnaker in k8s-cluster..."
@@ -52,13 +52,18 @@ ansible-playbook -b k8s-kubespray/kubespray/cluster.yml
 echo ".. Wait for completion of deployment...."
 
 echo ".. Copy kubeconfig file from master1 to launch machine ....."
-read -p "  [****] Enter the Namespace where you want to Deploy Spinnaker and related services :" master1_ip
+read -p "  [****] Enter the master1 private ip where to copy kubeconfig file to launch mahine :" master1_ip
+echo ".. Copying admin.conf file from master1 to launch machine....."
 sudo scp $master1_ip:/etc/kubernetes/admin.conf .
+echo ".. Renaming admin.conf file to config in launch machine....."
 sudo mv admin.conf config
+echo ".. Creating .kube folder in launch machine to copy config file....."
 sudo mkdir ~/.kube
+echo ".. Copying config file from current folder to .kube folder in launch machine....."
 sudo mv config ~/.kube/config
-read -p "  [****] Enter the Namespace where you want to Deploy Spinnaker and related services :" username
-sudo chown $suername:$username ~/.kube/config
+read -p "  [****] Enter the username with to run kubectl command in launch machine :" username
+echo ".. Changing ownership of .kube/config file in launch machine as the user....."
+sudo chown $username:$username ~/.kube/config
 
 echo ".. Verifying deployment of k8s-cluster from launch machine ....."
 echo ".. Displaying master and node details from the deployed of k8s-cluster from launch machine ....."
