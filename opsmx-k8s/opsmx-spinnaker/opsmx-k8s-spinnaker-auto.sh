@@ -27,13 +27,13 @@ fi
 ### Download required templates for configuration
 
 echo " .......Downloading minio templete file from OpsMx git repository wget..."
-wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/minio_template.yml
+wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/minio_templete.yml
 
 echo " .......Downloading config file from OpsMx git repository using wget..."
 wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/config
 
 echo " .......Downloading halyard templete file from OpsMx git repository using wget..."
-wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/halyard_template.yml
+wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/halyard_templete.yml
 
 echo " .......Downloading persistance volume file from OpsMx git repository using wget..."
 wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/pv.yml
