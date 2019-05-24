@@ -53,7 +53,7 @@ metadata:
   name: minio
   namespace: SPINNAKER_NAMESPACE
 data:
-  username: opsmx123456
-  password: opsmx123456
+  username: Minio-User
+  password: Minio-Password
 
 
