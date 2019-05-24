@@ -69,12 +69,12 @@ sed -i "s/MINIO-USER/$access_key/g" config
 sed -i "s/MINIO-PASSWORD/$secret_access_key/g" config
 
 printf '\n'
-base1=$(echo -ne "$access_key" |base64)
-base2=$(echo -ne "$secret_access_key" |base64)
+
 printf "\n   [****]  Fetching and Updating the Minio Secret [****] "
-sed -i "s/base64convertedaccesskey/$base1/" minio_templete.yml
-sed -i "s/base64convertedSecretAccesskey/$base2/" minio_templete.yml
 sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" minio_templete.yml
+sed -i "s/Minio-User/$access_key/g" minio_templete.yml
+sed -i "s/Minio-Password/$secret_access_key/g" minio_templete.yml
+
 
 echo "Started creating ConfigMap for minio in the namespace $spinnaker_namespace"
 kubectl create -f minio_templete.yml -n $spinnaker_namespace  
