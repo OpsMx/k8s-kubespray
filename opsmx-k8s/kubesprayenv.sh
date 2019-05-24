@@ -5,23 +5,18 @@
 
 
 #### Ansible Installation: In current setup we are using HAProxy system as our launch machine
-
-node_list=("x.x.x.x" "x.x.x.x" "x.x.x.x")
-user_names=("username" "username" "username")
+node_list=("x.x.x.x" "x.x.x.x")
 
 # Installing python is required to test ansible ping on each node .
 function install_prerequiste() {
   local -n nodelist=$1
-  local -n userlist=$2
-  #printf '1: %q\n' "${nodelist[@]}"
-  #printf '2: %q\n' "${userlist[@]}"
   for ((i=0;i<${#nodelist[@]};++i))
   do
     echo ""
-    echo "************* Connecting to ${nodelist[i]} with ${userlist[i]} *************"
-    # Download nfs-common on each target node
+    echo "************* Connecting to ${nodelist[i]} ************"
+    # Download python on each target node
     echo "Started installing python..."
-    ssh ${userlist[i]}@${nodelist[i]} "sudo apt-get update && sudo apt-get install -y python"
+    ssh -A ${nodelist[i]} "sudo apt-get update && sudo apt-get install -y python python-netaddr"
   done
 }
 
@@ -38,9 +33,8 @@ echo " .... Installing python-pip and virtualenv on the machine to initiate kube
 sudo apt-get update && sudo apt-get install -y python-pip  virtualenv
 
 echo "Started installing pre-requiste on each node ..."
-install_prerequiste node_list user_names
+install_prerequiste node_list
 echo "Installed pre-requiste successfully"
-
 
 
 	
