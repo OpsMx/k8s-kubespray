@@ -195,14 +195,14 @@ if [ "$spin_status" == Running ] ; then
 	echo "$spin_ready1" 
 	spin_ready2=$(cat spinpod.txt | grep spin-halyard | awk '{print $2}' | cut -d "/" -f 1)
 	echo "$spin_ready2" 
-		if [ "$spin_ready1" = "$spin_ready2" ] ; then
-			echo "$spin_ready1" 
-			echo "$spin_ready2" 
-			echo "$spin_ready" 
-			echo "... Spin halyard pod with pod name "$spin_pod" installed in the namespace "$spinnaker_namespace" "
-		else
-			echo "... Spin halyard pod with pod name "$spin_pod" failed to install in the namespace "$spinnaker_namespace" "
-		fi
+	if [ "$spin_ready1" = "$spin_ready2" ] ; then
+		echo "$spin_ready1" 
+		echo "$spin_ready2" 
+		echo "$spin_ready" 
+		echo "... Spin halyard pod with pod name "$spin_pod" installed in the namespace "$spinnaker_namespace" "
+	else
+		echo "... Spin halyard pod with pod name "$spin_pod" failed to install in the namespace "$spinnaker_namespace" "
+	fi
 else
 	echo "... Spin halyard pod with pod name "$spin_pod" failed to install in the namespace "$spinnaker_namespace" "
 fi	
