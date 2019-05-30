@@ -131,7 +131,7 @@ Scripts:
 	4. prometheus-deployment.yml
 	5. prometheus-service.yml
 Note: 
-	1. Update master and minion node IPs and their usernames in 'prometheus-auto.sh'.
+	1. Update master and minion node IPs and their usernames in 'prometheus-auto.sh' and uncomment the method,'install_nodeexporter'. This is applicable when node-exporter is deployed by 'prometheus-auto.sh' script.
 	2. Update 'config-map.yml' with the below entry:
 		- job_name: 'node1'
 		  static_configs:
@@ -146,9 +146,11 @@ Scripts:
 	2. k8s-hosts
 	2. node_exporter.service.j2
 Note: 
-	1. Ensure the inventory file 'k8s-hosts' with the hostnames of master and minion nodes.
+	1. Create a new inventory file 'k8s-hosts' with the hostnames of master and minion nodes.(or) the default inventory can also be used.
 Command:
 	$ ansible-playbook -i k8s-hosts node-exporter.yaml
+	(or)
+	$ ansible-playbook node-exporter.yaml
 	
 Step12: Grafana
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Grafana/grafana-setup
