@@ -70,8 +70,6 @@ Edit the below file: ( Should look like the below )
 	loadbalancer_apiserver_localhost: true
 	nginx_kube_apiserver_port: 6443
 	
-
-	loadbalancer_apiserver_localhost: true
 	upstream_dns_servers:
 	 - 8.8.8.8
 	cert_management: scrip
