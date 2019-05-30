@@ -32,30 +32,30 @@ else
 fi
 
 echo "Create a service account and then bind the cluster-admin role to the service account"
-kubectl create serviceaccount tiller --namespace $namespace
+kubectl create serviceaccount tiller --namespace kube-system
 status=$?
 if test $status -eq 0
 then
-  echo "Created service account successfully in $namespace namespace"
+  echo "Created service account successfully in 'kube-system' namespace"
 elif test $status -eq 1
 then
-  echo "'service account' is already exist in $namespace namespace!"
+  echo "'service account' is already exist in 'kube-system' namespace!"
 else
-  echo "Failed to create service account in $namespace namespace!"
+  echo "Failed to create service account in 'kube-system' namespace!"
   exit
 fi
 
 echo "Binding the cluster-admin role to the service account"
-kubectl create clusterrolebinding tiller-deploy --clusterrole cluster-admin --serviceaccount $namespace:tiller
+kubectl create clusterrolebinding tiller-deploy --clusterrole cluster-admin --serviceaccount kube-system:tiller
 status=$?
 if test $status -eq 0
 then
-  echo "Created the CluterRoleBinding successfully in $namespace namespace for admin"
+  echo "Created the CluterRoleBinding successfully in 'kube-system' namespace for admin"
 elif test $status -eq 1
 then
-  echo "The Cluster Admin Role is already exist in $namespace namespace for admin!"
+  echo "The Cluster Admin Role is already exist in 'kube-system' namespace for admin!"
 else
-  echo "Failed to create the ClusterRole in $namespace namespace for admin!"
+  echo "Failed to create the ClusterRole in 'kube-system' namespace for admin!"
 fi
 
 echo "Installing tiller ..."
@@ -91,8 +91,7 @@ else
 fi
 
 echo "Getting the custom helm umbrella chart for the EFK configuration"
-wget https://github.com/OpsMx/k8s-kubespray/blob/master/efk-0.0.1.tgz
-status=$?
+wget -O efk-0.0.1.tgz https://github.com/OpsMx/k8s-kubespray/blob/master/efk-0.0.1.tgz?raw=true
 if test $status -eq 0
 then
   echo "Downloaded the custom helm umbrella chart successfully"
