@@ -91,7 +91,7 @@ For addition, enabling 'helm'.
 	helm_version: v2.13.1
 
 File3:	
-edit 'k8s-kubespray/kubespray/roles/kubernetes-apps/ingress-controller/ingress-nginx/templates/svc-default-backend.yml.j2' and ensure the below:
+edit 'k8s-kubespray/kubespray/roles/kubernetes-apps/ingress_controller/ingress_nginx/templates/svc-default-backend.yml.j2' and ensure the below:
 	labels:
 		app.kubernetes.io/name: ingress-nginx
 		app.kubernetes.io/part-of: ingress-nginx
