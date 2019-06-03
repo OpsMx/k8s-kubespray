@@ -76,33 +76,12 @@ Edit the below file: ( Should look like the below )
 	kube_read_only_port: 10255
 
 File2:
-Configure 'Enable Ingress Controller Deployment'
 Verify the below things in k8s-kubespray/kubespray-install/default/group_vars/k8s-cluster/addons.yml
-	# Nginx ingress controller deployment
-	ingress_nginx_enabled: true
-	ingress_nginx_host_network: false
-	ingress_nginx_nodeselector:
-	  node-role.kubernetes.io/node: ""
-	
-For addition, enabling 'helm'.
+Enabling 'helm'.
 	helm_enabled: true
 	helm_version: v2.13.1
 
-File3:	
-edit 'k8s-kubespray/kubespray/roles/kubernetes-apps/ingress_controller/ingress_nginx/templates/svc-default-backend.yml.j2' and ensure the below:
-	labels:
-		app.kubernetes.io/name: ingress-nginx
-		app.kubernetes.io/part-of: ingress-nginx
-	spec:
-	  type: NodePort
-	  ports:
-		- port: 80
-		  targetPort: 80
-	  selector:
-		app.kubernetes.io/name: ingress-nginx
-		app.kubernetes.io/part-of: ingress-nginx
-
-File4:
+File3:
 Ensure the below lines in 'k8s-kubespray/kubespray-install/default/group_vars/k8s-cluster/k8s-cluster.yml'
 	manual_dns_server: 1.1.1.1
 	### Provide API server IPs with Pubic-IPs
