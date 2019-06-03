@@ -96,11 +96,11 @@ Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubesprayde
 Step8: Execute nfs-auto.sh script and wait for completion
 Note: Update node_list in nfs-auto.sh
 https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/nfs-auto.sh
-	$ bash nfs-auto.sh
+	$ sudo bash k8s-kubespray/opsmx-k8s/nfs-auto.sh
 
 Step9: Execute efk-installer.sh script and wait for completion
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/kubespray-install/efk/efk-installer.sh
-	$ bash efk-installer.sh
+	$ bash k8s-kubespray/kubespray-install/efk/efk-installer.sh
 
 Step10: For Prometheous installtion follow the steps 
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Prometheus/prometheus-setup
