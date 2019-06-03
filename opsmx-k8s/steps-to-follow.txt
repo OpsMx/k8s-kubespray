@@ -126,7 +126,7 @@ Scripts:
 	2. grafana-deployment.yml
 	3. grafana-service.yml
 Command: 
-	$ bash grafana-auto.sh
+	$ bash k8s-kubespray/kubespray-install/Grafana/grafana-setup/grafana-auto.sh
 	
 Step13: Follow spinnaker installation step and script
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
