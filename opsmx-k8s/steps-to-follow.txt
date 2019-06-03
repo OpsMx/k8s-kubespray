@@ -86,7 +86,9 @@ Ensure the below lines in 'k8s-kubespray/kubespray-install/default/group_vars/k8
 	manual_dns_server: 1.1.1.1
 	### Provide API server IPs with Pubic-IPs
 	kube_apiserver_ip: Public IPs of launch and all kube systems IP ( 35.234.23.5 )
-
+Note: If you use more than three DNS server in resolve.conf. Do the update in below file
+		k8s-kubespray/kubespray/roles/container-engine/docker/defaults/main.yml
+		Change : docker_dns_servers_strict: true ( to false )
 Step7: Execute Kubespraydeployment-auto.sh script and wait for completion
 command : sudo sh k8s-kubespray/opsmx-k8s/kubespraydeplyment-auto.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubespraydeplyment-auto.sh
