@@ -3,6 +3,7 @@
 #### Organization : OpsMX
 #### Author : M Gnana Seelan
 
+# Add the Cluster node private-IPs which are going to be NFS client
 node_list=("10.170.0.11" "10.170.0.8" "10.170.0.9")
 
 # This is required to be executed for each minion node.
