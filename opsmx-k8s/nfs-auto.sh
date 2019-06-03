@@ -5,6 +5,10 @@
 
 # Add the Cluster node private-IPs which are going to be NFS client
 node_list=("10.170.0.11" "10.170.0.8" "10.170.0.9")
+nfsfolder="/home/public"
+nfs_server_ip="10.170.0.28"
+nfs_share_iprange="10.0.0.0/8"
+
 
 # This is required to be executed for each minion node.
 function nfs_client() {
@@ -83,25 +87,25 @@ echo ".......... Starting to install nfs server ......"
 sudo apt-get update && sudo apt-get install -y nfs-kernel-server
 echo ".......... Creating a folder for nfs share ......"
 printf "\n"
-read -p " Enter NFS Folder name which need to be created ( example : /home/nfsshare ): " nfsfolder
+#read -p " Enter NFS Folder name which need to be created ( example : /home/nfsshare ): " nfsfolder
 echo ".. NFS folder is creating..."
-read -p  " Enter the private ip range with which the nfs share folder will be exposed ( for example 10.0.0.0/18): " nfs_share_iprange
+#read -p  " Enter the private ip range with which the nfs share folder will be exposed ( for example 10.0.0.0/18): " nfs_share_iprange
 echo " updating ip range of client to be exposed "
 sudo mkdir -p $nfsfolder
 echo ".......... Changing ownership and permission to folder for nfs share ......"
-sudo chown nobody:nogroup $nfsfolder	
+sudo chown nobody:nogroup $nfsfolder
 sudo chmod 777 $nfsfolder
 echo ".......... Updating the exports file with nfs share folder details ......"
 # sudo su
 sudo echo "$nfsfolder $nfs_share_iprange(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
 # exit
 echo ".......... Checking the NFS configuration details ......"
-sudo exportfs -a	
+sudo exportfs -a
 sudo exportfs
 echo ".......... NFS Server configutaion sucessfully completed ......"
 
 echo ".......... NFS client provisioning setup in the k8s-cluster ......"
-read -p  " Enter NFS server ip ( example : 10.165.0.56 ): " nfs_server_ip
+#read -p  " Enter NFS server ip ( example : 10.165.0.56 ): " nfs_server_ip
 
 
 
@@ -113,3 +117,4 @@ echo "Installed nfs_client successfully"
 echo " Installing nfs client provisioner in k8s cluster"
 helm install stable/nfs-client-provisioner --name nfs --set nfs.server=$nfs_server_ip --set nfs.path=$nfsfolder
 echo ".......... NFS Server configutaion with nfs-client provisioning is sucessfully completed in k8s-cluster......"
+
