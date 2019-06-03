@@ -94,6 +94,7 @@ command : sudo sh k8s-kubespray/opsmx-k8s/kubespraydeplyment-auto.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubespraydeplyment-auto.sh
 		
 Step8: Execute nfs-auto.sh script and wait for completion
+Note: Update node_list in nfs-auto.sh
 https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/nfs-auto.sh
 	$ bash nfs-auto.sh
 
