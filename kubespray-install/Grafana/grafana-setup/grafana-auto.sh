@@ -1,7 +1,9 @@
 #!/bin/bash
 echo "installing Grafana locally ..."
-echo "Enter the namespace"
-read -r namespace
+#echo "Enter the namespace"
+#read -r namespace
+namespace="monitoring"
+graf_path="k8s-kubespray/kubespray-install/Grafana/grafana-setup/"
 
 echo "Started installing Grafana in $namespace"
 kubectl create namespace $namespace
@@ -19,7 +21,7 @@ fi
 
 # Create a deployment on monitoring namespace.
 echo "Started creating Deployment in the name-space $namespace"
-kubectl create -f grafana-deployment.yml --namespace=$namespace
+kubectl create -f $graf_path/grafana-deployment.yml --namespace=$namespace
 status=$?
 if test $status -eq 0
 then
@@ -31,7 +33,7 @@ fi
 
 # Create the service using the following command
 echo "Started creating service in the name-space $namespace"
-kubectl create -f grafana-service.yml --namespace=$namespace
+kubectl create -f $graf_path/grafana-service.yml --namespace=$namespace
 status=$?
 if test $status -eq 0
 then
