@@ -35,7 +35,7 @@ Execute command : git clone https://github.com/OpsMx/k8s-kubespray
 
 Step3: Execute kubesprayenv.sh script in launch machine then check setting into virtualenv for ansible setup
 Note: update node lists with Private IPs of masters and worker nodes
-Command : sudo bash k8s-kubespray/opsmx-k8s/kubesprayenv.sh
+	$ sudo bash k8s-kubespray/opsmx-k8s/kubesprayenv.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubesprayenv.sh
 Setup Virtual environment to execute ansible
 	$ virtualenv ~/ansible
@@ -90,7 +90,7 @@ Note: If you use more than three DNS server in resolve.conf. Do the update in be
 		k8s-kubespray/kubespray/roles/container-engine/docker/defaults/main.yml
 		Change : docker_dns_servers_strict: true ( to false )
 Step7: Execute Kubespraydeployment-auto.sh script and wait for completion
-command : sudo sh k8s-kubespray/opsmx-k8s/kubespraydeplyment-auto.sh
+	$ sudo sh k8s-kubespray/opsmx-k8s/kubespraydeplyment-auto.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubespraydeplyment-auto.sh
 		
 Step8: Execute nfs-auto.sh script and wait for completion
