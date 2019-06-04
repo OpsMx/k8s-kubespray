@@ -6,6 +6,15 @@ Note:1. Update NFS server IP in the file. The share folder and server IP may var
 Step2: Execute the script opsmx-k8s-spinnaker-auto.sh 
 	$ sudo bash k8s-kubespray/opsmx-k8s/opsmx-spinnaker/opsmx-k8s-spinnaker-auto.sh
 
+Step 3: Once the spin-halyard pod is in Running state. The following command required to run
+	$ kubectl -n $spinnaker_namespace exec -it $spin_pod /bin/bash
+	$ hal config
+	$ hal version list
+	$ hal config version edit --version 1.14.2
+	$ hal config 
+	$ hal deploy apply
+Note : Wait until all the pods will be in Running state
+	$ kubectl -n $spinnaker_namespace get pods -w
 
 Step 3: Run the following commands if you would like to expose outside using NodePort 
   $ kubectl get svc -n $spinnaker_namespace -o wide
