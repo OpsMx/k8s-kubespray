@@ -4,7 +4,7 @@ metadata:
   name: pv_claim_name
 spec:
   capacity:
-    storage: 1Gi
+    storage: 10Gi
   accessModes:
     - "ReadWriteOnce"
   nfs:
