@@ -1,3 +1,5 @@
+# This section is the configuration of halyard templete
+----
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -20,7 +22,6 @@ spec:
     spec:
       containers:
       - name: halyard-daemon
-        # todo - make :stable or digest of :stable
         image: gcr.io/spinnaker-marketplace/halyard:stable 
         imagePullPolicy: Always
         command:
