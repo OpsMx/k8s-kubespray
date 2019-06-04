@@ -2,6 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: prometheus-ingress
+  namespace: monitoring
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -19,6 +20,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: grafana-ingress
+  namespace: monitoring
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -36,6 +38,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: efk-ingress
+  namespace: logging
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -48,37 +51,4 @@ spec:
             serviceName: efk-kibana
             servicePort: 443
             
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: deck-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: deck.master.com
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: spin-deck
-            servicePort: 9000
-            
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: gate-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: gate.master.com
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: spin-gate
-            servicePort: 8043
 
