@@ -1,7 +1,0 @@
-Physical or Virtual Machines : (i) For Master : 2 GB RAM, 25 GB HDD, 2 CPU and Network - 3 Nos ; (ii) For Worker or Node : 8 GB RAM, 25 GB HDD, 2 CPU and Network ; (iii) HA Proxy ; (iv) Loadbalancer ( either external or internal) ; (v) NFS Server :8 GB RAM, 250 GB HDD (Storage as per need) 2 CPU and Network ; (vi) LDAP and DNS Server
-Operating Systems : Ubuntu 18.04 LTS
-Dependencies : Ansible , Python, pip, jinja, python-netaddr . The versions should be as per competibilty of each other. Currently used version is Ansible 2.7.10 , python 2.7.15rc1.
-Fqdn for all the systems. For example : kubemaster.opsmx.com
-Public and Private IPs for exposing applications outside and configuring internal communications
-Password less ssh configuration between all the master and non-master nodes
-Ansible launch machine : Apart from master and non-master node
