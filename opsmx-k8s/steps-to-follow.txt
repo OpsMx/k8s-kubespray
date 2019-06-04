@@ -130,7 +130,7 @@ Command:
 	
 Step13: Ingress-Controller
 	Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Ingress-Controller
-	Scripts: bash ingress-controller-setup.sh ingress.conf	
+	Scripts: bash k8s-kubespray/Ingress-Controller/ingress-controller-setup.sh k8s-kubespray/Ingress-Controller/ingress.conf	
 	
 Step14: Follow spinnaker installation step and script
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
