@@ -1,7 +1,7 @@
 Step1: Create persistance volume by executing the script pvcreate.sh. 
 Note:1. Update NFS server IP in the script. The share folder and server IP may vary if new share folder added. 
      2. Replace the claim_name for every new pvcreation.
-	$ sudo sh k8s-kubespray/master/opsmx-k8s/opsmx-spinnaker/pvcreate.sh
+	$ sudo sh k8s-kubespray/opsmx-k8s/opsmx-spinnaker/pvcreate.sh
 
 Step2: Execute the script opsmx-k8s-spinnaker-auto.sh 
 	$ sudo bash k8s-kubespray/opsmx-k8s/opsmx-spinnaker/opsmx-k8s-spinnaker-auto.sh
