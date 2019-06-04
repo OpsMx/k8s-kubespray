@@ -1,5 +1,3 @@
-# This section is the configuration of halyard templete
-----
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
