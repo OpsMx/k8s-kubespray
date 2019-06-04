@@ -57,3 +57,12 @@ then
 fi
 
 echo " ******** Completed settingup Ingress Controller successfully ******** "
+
+echo " ******** Started creating the ingress rules for EFK, Prometheus, Graphana, Spinaker"
+kubectl create -f ingress-rules.yaml
+status=$?
+if test $status -eq 0
+then
+  echo " ******** Created the nginx-ingress-rules successfully ******** "
+fi
+

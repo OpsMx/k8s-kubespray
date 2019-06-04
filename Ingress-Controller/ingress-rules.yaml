@@ -1,0 +1,84 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: prometheus.master.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: prometheus-service
+            servicePort: 9090
+            
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: grafana.master.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: grafana-service
+            servicePort: 3000
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: efk-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: efk.master.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: efk-kibana
+            servicePort: 443
+            
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: deck-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: deck.master.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: spin-deck
+            servicePort: 9000
+            
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gate-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: gate.master.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: spin-gate
+            servicePort: 8043
+
