@@ -33,7 +33,7 @@ printf '\n'
 printf "\n  [****] Please ensure you have a docker login for pushing the script to customized repository [****] "
 
 
-spinnaker_namespace="spintest"
+spinnaker_namespace="spinnaker"
 access_key="minio"
 secret_access_key="minio1234"
 kube_path="~/.kube/config"
