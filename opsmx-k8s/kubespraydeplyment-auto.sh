@@ -6,12 +6,6 @@
 
 #### Ansible Installation: In current setup we are using HAProxy system as our launch machine
 
-echo".. Performing ssh testing from launch machine....."
-ansible-playbook k8s-kubespray/kubespray-install/ssh.yml
-
-echo".. Performing haproxy testing from launch machine....."
-ansible-playbook k8s-kubespray/kubespray-install/haproxy/haproxy.yml
-
 ## Kubect binary installation
 echo " .......Checking kubectl binary available in the system/node to deploy spinnaker in k8s-cluster..."
 if [ -x /usr/bin/local/kubectl ]; then
