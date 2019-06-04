@@ -24,7 +24,7 @@ printf "\n  [****] Displaying persisitance volume before pv creation [****] "
 kubectl  get pv 
 
 printf "\n  [****] Creating persisitance volume for the deployment [****] "
-kubectl create -f k8s-kubespray/master/opsmx-k8s/opsmx-spinnaker/pv.yml
+kubectl create -f k8s-kubespray/opsmx-k8s/opsmx-spinnaker/pv.yml
 
 printf "\n  [****] Displaying persisitance volume after pv creation [****] "
 kubectl  get pv 
