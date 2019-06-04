@@ -1,6 +1,3 @@
-----
-# This segment is for halconfigmap setting details
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -78,7 +75,7 @@ data:
         type: Distributed
         accountName: kubernetes-v2
         updateVersions: true
-        location: SPINNAKER_NAMESPACE 
+        location: SPINNAKER_NAMESPACE
         consul:
           enabled: false
         vault:
