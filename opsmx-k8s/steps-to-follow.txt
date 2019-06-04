@@ -89,7 +89,11 @@ Ensure the below lines in 'k8s-kubespray/kubespray-install/default/group_vars/k8
 Note: If you use more than three DNS server in resolve.conf. Do the update in below file
 		k8s-kubespray/kubespray/roles/container-engine/docker/defaults/main.yml
 		Change : docker_dns_servers_strict: true ( to false )
-Step7: Execute Kubespraydeployment-auto.sh script and wait for completion
+Step7: Execute the command 
+	$ ansible-playbook k8s-kubespray/kubespray-install/ssh.yml
+	$ansible-playbook k8s-kubespray/kubespray-install/haproxy/haproxy.yml
+	
+Execute Kubespraydeployment-auto.sh script and wait for completion
 	$ sudo sh k8s-kubespray/opsmx-k8s/kubespraydeplyment-auto.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubespraydeplyment-auto.sh
 		
@@ -145,5 +149,6 @@ Step12: Ingress-Controller
 	
 Step13: Follow spinnaker installation step and script
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
+Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/opsmx-spinnaker-step.txt
 
 
