@@ -36,7 +36,7 @@ printf "\n  [****] Please ensure you have a docker login for pushing the script 
 spinnaker_namespace="spinnaker"
 access_key="minio"
 secret_access_key="minio1234"
-kube_path="~/.kube/config"
+# kube_path="~/.kube/config"
 
 
 printf "\n"
@@ -125,35 +125,7 @@ printf "\n  [****] Displaying all the runing pods in specified namespace [****] 
 kubectl -n $spinnaker_namespace  get pods 
 printf '\n'
 printf "\n  [****] Storing spin-halyard pod in a spin_pod to use further in the script [****] "
-spin_pod=`kubectl -n $spinnaker_namespace  get pods | grep spin-halyard`
+spin_pod=`kubectl -n $spinnaker_namespace  get pods | grep spin-halyard | awk '{print $1}'`
 
 
-
-printf '\n'
-printf "\n  [****] Setting up hal config file in the spin halyard pod [****] "
-kubectl -n $spinnaker_namespace exec -it $spin_pod hal config 
-
-printf '\n'
-printf "\n  [****] Listing the spinnaker version using hal command in the spin halyard pod [****] "
-kubectl -n $spinnaker_namespace exec -it $spin_pod hal version list
-
-printf "\n  [****] Storing spinnaker version in a spin_version to use further in the script to hal deploy apply [****] "
-spin_version=`kubectl -n $spinnaker_namespace  get pods | grep -m1 version: | awk printf{$1}`
-printf '\n'
-printf "\n  [****] Configuring spinnaker version using hal command in the spin halyard pod [****] "
-kubectl -n $spinnaker_namespace exec -it $spin_pod hal config version edit --version $spin_version
-
-printf '\n'
-printf "\n  [****] Configuring hal using hal command in the spin halyard pod [****] "
-kubectl -n $spinnaker_namespace exec -it $spin_pod hal config
-
-printf '\n'
-printf "\n  [****] Deploying hal in the spin halyard pod to get spinnaker other pods[****] "
-kubectl -n $spinnaker_namespace exec -it $spin_pod hal deploy apply
-
-sleep 180
-printf "\n  [****] Displaying all the runing pods in specified namespace [****] "
-kubectl -n $spinnaker_namespace  get pods 
-
-printf '\n'
 
