@@ -26,191 +26,134 @@ fi
 
 ### Download required templates for configuration
 
-echo " .......Downloading minio templete file from OpsMx git repository wget..."
-wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/minio_templete.yml
+printf "\n  [****] Starting the Distributed Spinnaker Lite Version Installation [****] "
+printf '\n'
+printf "\n  [****] Spinnaker would be installed in the Spinnaker Namespace which it would create by default [****] "
+printf '\n'
+printf "\n  [****] Please ensure you have a docker login for pushing the script to customized repository [****] "
 
-echo " .......Downloading config file from OpsMx git repository using wget..."
-wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/config
 
-echo " .......Downloading halyard templete file from OpsMx git repository using wget..."
-wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/halyard_templete.yml
+spinnaker_namespace="spintest"
+access_key="minio"
+secret_access_key="minio1234"
+kube_path="~/.kube/config"
 
-echo " .......Downloading persistance volume file from OpsMx git repository using wget..."
-wget https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/pv.yml
 
-echo "Deploying Minio ..."
-echo "Enter the namespace"
-read -p "  [****] Enter the Namespace where you want to Deploy Spinnaker and related services :" spinnaker_namespace
+printf "\n"
 
-echo "Started Deploying minio in $spinnaker_namespace"
 kubectl create namespace $spinnaker_namespace
-status=$?
-if test $status -eq 0
-then
-  echo "The namepsace '$spinnaker_namespace' is created successfully"
-elif test $status -eq 1
-then
-  echo "The namespace '$spinnaker_namespace' is already exist!"
-else
-  echo "Failed to create the namepsace '$spinnaker_namespace'!"
-  exit
-fi
 
-#### Create the Minio Deployment with service and ConfigMap.
-echo "Updating minio config and halyard templete files" 
-#Setting up the Minio Storage for the Deployment
+printf "\n  [****] Displaying all the runing pods in specified namespace [****] "
+kubectl -n $spinnaker_namespace  get pods 
+
+printf "\n  [****] Displaying all the Availabe persisitance volume [****] "
+kubectl  get pv 
+
+#Setting up the Minio Storage for Spinnaker Deployment
 printf "\n  [****] Setting up the Storage for the Spinnaker Deployment [****]" 
 printf '\n'
-read -p "  [****] Enter the Minio Access Key [Access key length should be between minimum 3 characters in length] :: " access_key
-read -p "  [****] Enter the Minio Secret Access Key [Secret key should be in between 8 and 40 characters] :: " secret_access_key
-printf '\n'
-
-sed -i "s/MINIO-USER/$access_key/g" config
-sed -i "s/MINIO-PASSWORD/$secret_access_key/g" config
 
 printf '\n'
+base1=$(echo -ne "$access_key" |base64)
+base2=$(echo -ne "$secret_access_key" |base64)
 
 printf "\n   [****]  Fetching and Updating the Minio Secret [****] "
-sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" minio_templete.yml
-sed -i "s/Minio-User/$access_key/g" minio_templete.yml
-sed -i "s/Minio-Password/$secret_access_key/g" minio_templete.yml
+printf '\n'
+curl https://raw.githubusercontent.com/OpsMx/k8s-kubespray/master/opsmx-k8s/opsmx-spinnaker/minio_templete.yml -o minio_template.yml
+printf '\n'
+sed -i "s/base64convertedaccesskey/$base1/" minio_template.yml
+sed -i "s/base64convertedSecretAccesskey/$base2/" minio_template.yml
+sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" minio_template.yml
+
+printf "\n  [****] Displaying persisitance volume before minio claim [****] "
+kubectl  get pv 
+printf "\n  [****] Creating minio pod [****] "
+kubectl create -n $spinnaker_namespace -f minio_template.yml
+sleep 10
 
 
-echo "Started creating ConfigMap for minio in the namespace $spinnaker_namespace"
-kubectl create -f minio_templete.yml -n $spinnaker_namespace  
-status=$?
-if test $status -eq 0
-then
-	echo "Created the minio deployment extension as minio-deployment successfully"
-	echo "Created the minio service as minio-service successfully"
-	echo "Created the minio ConfigMap as minio successfully"
-else
-	echo "Failed to create the minio deployment, service and ConfigMap!"
-  #exit
-fi
-sleep 30
-echo " Minio Pod status Checking"
-kubectl get pod -n $spinnaker_namespace >> miniopod.txt
-minio_pod=$(cat miniopod.txt | grep minio | awk '{print $1}')
-minio_status=$(cat miniopod.txt | grep minio | awk '{print $3}')
-echo "$minio_pod" 
-echo "$minio_status" 
-if [ "$minio_status" == Running ] ; then
-	minio_ready=$(cat miniopod.txt | grep minio | awk '{print $2}')
-	echo "$minio_ready" 
-	minio_ready1=$(cat miniopod.txt | grep minio | awk '{print $2}' | cut -d "/" -f 2)
-	echo "$minio_ready1" 
-	minio_ready2=$(cat miniopod.txt | grep minio | awk '{print $2}' | cut -d "/" -f 1)
-	echo "$minio_ready2" 
-	if [ "$minio_ready1" = "$minio_ready2" ] ; then
-	        echo "$minio_ready1" 
-	        echo "$minio_ready2" 
-			echo "$minio_ready" 
-			echo "... Minio pod with pod name $minio_pod installed in the namespace "$spinnaker_namespace" "
-	else
-		echo "... Minio pod with pod name $minio_pod failed to install in the namespace "$spinnaker_namespace" "
-	fi
-else
-	echo "... Minio pod with pod name $minio_pod failed to install in the namespace "$spinnaker_namespace" "
-fi
+printf "\n  [****] Displaying persisitance volume after minio claim [****] "
+kubectl  get pv 
 
+printf "\n  [****] Displaying all the runing pods in specified namespace [****] "
+kubectl -n $spinnaker_namespace  get pods 
 
-# Create a configMap for the Kube config that would be mounted on the Halyard pod
-echo "Started Create a configMap for the Kube config that would be mounted on the Halyard pod"
-read -p  "Provide kube config file full path with kube config file (~/.kube/config):  " kube_path
-kubectl create configmap kubeconfig --from-file=$kube_path -n $spinnaker_namespace
-status=$?
-if test $status -eq 0
-then
-  echo "Created the configmap as kubeconfig successfully" 
-else
-  echo "Failed to create the kubeconfig file!"
-  #exit
-fi
-
-
-# Create a configMap for the Halyard config that would also be mounted on the Halyard Pod
-echo " Updating config file"
-
-read -p "  [****] Enter the Spinnaker version you like to deploy (1.13.5) :" spinnaker_version
-sed -i "s/SPINNAKER-VERSION/$spinnaker_version/g" config
-
-read -p "  [****] Enter the Docker user name (cisco11):" docker_username
-sed -i "s/DOCKER-USERNAME/$docker_username/g" config
-read -p "  [****] Enter the Docker user name (cisco@123):" docker_password
-sed -i "s/DOCKER-PASSWORD/$docker_password/g" config
-read -p "  [****] Enter the Docker repository name (cisco/restapp):" docker_repository
-sed -i "s/DOCKER-REPOSITORY-NAME/$docker_repository/g" config
-read -p "  [****] Enter the Jenkins name (jenkin-master):" jenkin_name
-sed -i "s/JENKINS-NAME/$jenkin_name/g" config
-read -p "  [****] Enter the Jenkins name (jenkin-master):" jenkin_username
-sed -i "s/JENKINS-USER/$jenkin_username/g" config
-read -p "  [****] Enter the Jenkins name (jenkin-master):" jenkin_password
-sed -i "s/JENKINS-PASSWORD/$jenkin_password/g" config
-
-
-sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" config
+#Fork the files from Opsmx Github
+printf "\n  [****] Fetching the files for the Halyard Template and the ConfigMap for the deployment  [****]" 
+printf '\n'
+curl https://raw.githubusercontent.com/OpsMx/k8s-kubespray/master/opsmx-k8s/opsmx-spinnaker/spinhalyardconfig_templete.yml -o halconfigmap_template.yml
+printf '\n' 
+curl https://raw.githubusercontent.com/OpsMx/k8s-kubespray/master/opsmx-k8s/opsmx-spinnaker/halyard_templete.yml -o halyard_template.yml
+printf '\n'
 
 
 
-echo "Started Configuring halyard config file "
-kubectl create configmap halconfig --from-file=config -n $spinnaker_namespace
-status=$?
-if test $status -eq 0
-then
-  echo "Created the configmap as halconfig successfully" 
-else
-  echo "Failed to create the halconfig file!"
-  #exit
-fi
+#changing the values in halyard-template and halconfig
+
+sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" halyard_template.yml
+sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" halconfigmap_template.yml
+
+#Applying the Halyard Pod
+printf "\n  [****] Configuring the Dependencies [****]"
+printf '\n'
 
 
-echo "Started Configuring halyard templete file "
+#Updating the configs in the  Environment 
 
-sed -i "s/SPINNAKER_NAMESPACE/$spinnaker_namespace/g" halyard_templete.yml
+printf " \n  [****] Updating configmap [****]" 
 
-kubectl create -f halyard_templete.yml -n $spinnaker_namespace
-status=$?
-if test $status -eq 0
-then
-  echo "Created spin halyard pod and service successfully"
-else
-  echo "Failed to create the service!"
-  #exit
-fi
 
-echo " Checking deployment of pods in the created name space"
-sleep 55
-kubectl get pod -n $spinnaker_namespace >> spinpod.txt
-echo " Wait untill the halyard pod is with Running status and 1/1 Ready"
+sed -i "s/MINIO_USER/$access_key/" halconfigmap_template.yml
+sed -i "s/MINIO_PASSWORD/$secret_access_key/" halconfigmap_template.yml
 
-spin_pod=$(cat spinpod.txt | grep spin-halyard | awk '{print $1}')
-spin_status=$(cat spinpod.txt | grep spin-halyard | awk '{print $3}')
-echo "$spin_pod" 
-echo "$spin_status" 
-if [ "$spin_status" == Running ] ; then
-	spin_ready=$(cat spinpod.txt | grep spin-halyard | awk '{print $2}')
-	echo "$spin_ready" 
-	spin_ready1=$(cat spinpod.txt | grep spin-halyard | awk '{print $2}' | cut -d "/" -f 2)
-	echo "$spin_ready1" 
-	spin_ready2=$(cat spinpod.txt | grep spin-halyard | awk '{print $2}' | cut -d "/" -f 1)
-	echo "$spin_ready2" 
-	if [ "$spin_ready1" = "$spin_ready2" ] ; then
-		echo "$spin_ready1" 
-		echo "$spin_ready2" 
-		echo "$spin_ready" 
-		echo "... Spin halyard pod with pod name "$spin_pod" installed in the namespace "$spinnaker_namespace" "
-	else
-		echo "... Spin halyard pod with pod name "$spin_pod" failed to install in the namespace "$spinnaker_namespace" "
-	fi
-else
-	echo "... Spin halyard pod with pod name "$spin_pod" failed to install in the namespace "$spinnaker_namespace" "
-fi	
+
+printf "\n  [****] Applying The Halyard ConfigMap, Secrets and the Halyard Deployment Pod [****] "
+
+printf '\n'
+
+printf "\n  [****] Creating  halconfig from halconfigmap template file [****] "
+kubectl apply -f halconfigmap_template.yml -n $spinnaker_namespace
+
+printf "\n  [****] Creating secret for kubeconfig from kubeconnfig file [****] "
+kubectl create secret generic kubeconfig --from-file=$kube_path -n $spinnaker_namespace
+
+## Deploying spin-halyard pod to initiate hal deply apply
+printf "\n  [****] Creating spin-halyard pod [****] "
+kubectl apply -f halyard_template.yml -n $spinnaker_namespace
+sleep 35
+printf "\n  [****] Displaying all the runing pods in specified namespace [****] "
+kubectl -n $spinnaker_namespace  get pods 
+printf '\n'
+printf "\n  [****] Storing spin-halyard pod in a spin_pod to use further in the script [****] "
+spin_pod=`kubectl -n $spinnaker_namespace  get pods | grep spin-halyard`
 
 
 
+printf '\n'
+printf "\n  [****] Setting up hal config file in the spin halyard pod [****] "
+kubectl -n $spinnaker_namespace exec -it $spin_pod hal config 
 
+printf '\n'
+printf "\n  [****] Listing the spinnaker version using hal command in the spin halyard pod [****] "
+kubectl -n $spinnaker_namespace exec -it $spin_pod hal version list
 
+printf "\n  [****] Storing spinnaker version in a spin_version to use further in the script to hal deploy apply [****] "
+spin_version=`kubectl -n $spinnaker_namespace  get pods | grep -m1 version: | awk printf{$1}`
+printf '\n'
+printf "\n  [****] Configuring spinnaker version using hal command in the spin halyard pod [****] "
+kubectl -n $spinnaker_namespace exec -it $spin_pod hal config version edit --version $spin_version
 
+printf '\n'
+printf "\n  [****] Configuring hal using hal command in the spin halyard pod [****] "
+kubectl -n $spinnaker_namespace exec -it $spin_pod hal config
 
+printf '\n'
+printf "\n  [****] Deploying hal in the spin halyard pod to get spinnaker other pods[****] "
+kubectl -n $spinnaker_namespace exec -it $spin_pod hal deploy apply
+
+sleep 180
+printf "\n  [****] Displaying all the runing pods in specified namespace [****] "
+kubectl -n $spinnaker_namespace  get pods 
+
+printf '\n'
 
