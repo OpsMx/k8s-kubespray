@@ -143,7 +143,7 @@ Step12: Ingress-Controller
 	Note:
 	1. Update 'ingress.conf' file with the required inputs for namespace & source path.
 	2. After installation, update '/etc/haproxy/haproxy.cfg' file in the launch machine with ingress service port.
-	   The command, 'kubectl get svc --all-namespaces' can be used to know the ingress service port.
+	   The command, 'kubectl get svc -n ingress-nginx' can be used to know the ingress service port.
 	
 	Command: bash k8s-kubespray/Ingress-Controller/ingress-controller-setup.sh k8s-kubespray/Ingress-Controller/ingress.conf	
 	
