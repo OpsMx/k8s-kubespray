@@ -15,6 +15,7 @@ read_inputs()
     case "$key" in
       '#'*) ;;
       "NAME_SPACE") name_space="$value" ;;
+      "SOURCE_PATH") src_space="$value" ;;
     esac
   done < "$file"
   echo " ******** Completed reading of input values from $1 ******** "
@@ -30,14 +31,18 @@ if [ -z "$name_space" ]; then
         echo "Namespace is empty! Please specify the valid namespace in ingress.conf and try again!"
         exit 0
 fi
+if [ -z "$src_space" ]; then
+        echo "SourcePath is empty! Please specify the valid valid path of the script location and try again!"
+        exit 0
+fi
 
 echo " ******** Started updating of template yaml files ... ******** "
-sed -e "s#@NAMESPACE@#${name_space}#g" ./service-nodeport.yaml.temp > ./service-nodeport.yaml
-sed -e "s#@NAMESPACE@#${name_space}#g" ./mandatory.yaml.temp > ./mandatory.yaml
+sed -e "s#@NAMESPACE@#${name_space}#g" $src_space/service-nodeport.yaml.temp > $src_space/service-nodeport.yaml
+sed -e "s#@NAMESPACE@#${name_space}#g" $src_space/mandatory.yaml.temp > $src_space./mandatory.yaml
 echo " ******** Completed the updating of template yaml files ******** "
 
 echo " ******** Creating the ingress controller service ... ******** "
-kubectl apply -f service-nodeport.yaml
+kubectl apply -f $src_space/service-nodeport.yaml
 status=$?
 if test $status -eq 0
 then
@@ -49,17 +54,22 @@ fi
 
 # Create the 'nginx-ingress-controller' ingress controller deployment, along with the Kubernetes RBAC roles and bindings
 echo " ******** Started creating the 'nginx-ingress-controller' ingress controller deployment, along with the Kubernetes RBAC roles and bindings"
-kubectl apply -f mandatory.yaml
+kubectl apply -f $src_space/mandatory.yaml
 status=$?
 if test $status -eq 0
 then
-  echo " ******** Created the nginx-ingress-controller successfully ******** "
+  echo " ******** Creating the nginx-ingress-controller ******** "
 fi
+echo " ********* Waiting for ingress nginx controller to be up and running ..."
+sleep 30
+echo ""
+echo " ********* Disaplying ingress nginx controller details ..."
+kubectl get all -n ingress-nginx
 
 echo " ******** Completed settingup Ingress Controller successfully ******** "
 
 echo " ******** Started creating the ingress rules for EFK, Prometheus, Graphana, Spinaker"
-kubectl create -f ingress-rules.yaml
+kubectl create -f $src_space/ingress-rules.yaml
 status=$?
 if test $status -eq 0
 then
