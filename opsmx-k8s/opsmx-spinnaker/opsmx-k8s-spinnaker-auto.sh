@@ -112,15 +112,15 @@ printf "\n  [****] Applying The Halyard ConfigMap, Secrets and the Halyard Deplo
 printf '\n'
 
 printf "\n  [****] Creating  halconfig from halconfigmap template file [****] "
-kubectl apply -f halconfigmap_template.yml -n $spinnaker_namespace
+kubectl create -f halconfigmap_template.yml -n $spinnaker_namespace
 
 printf "\n  [****] Creating secret for kubeconfig from kubeconnfig file [****] "
-kubectl create secret generic kubeconfig --from-file=$kube_path -n $spinnaker_namespace
+kubectl create configmap kubeconfig --from-file=/home/ubuntu/.kube/config -n $spinnaker_namespace
 
 ## Deploying spin-halyard pod to initiate hal deply apply
 printf "\n  [****] Creating spin-halyard pod [****] "
-kubectl apply -f halyard_template.yml -n $spinnaker_namespace
-sleep 35
+kubectl create -f halyard_template.yml -n $spinnaker_namespace
+sleep 45
 printf "\n  [****] Displaying all the runing pods in specified namespace [****] "
 kubectl -n $spinnaker_namespace  get pods 
 printf '\n'
