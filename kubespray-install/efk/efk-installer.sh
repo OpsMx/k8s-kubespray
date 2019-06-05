@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "installing EFK in Kubernetes cluster ..."
-echo "Enter the namespace"
+#echo "Enter the namespace"
 #read -r namespace
 namespace="logging"
 
@@ -111,13 +111,3 @@ then
 else
   echo "Failed to install the custom helm umbrella chart in $namespace namespace!"
 fi
-
-#echo "Forwarding efk-kibana service to local host ..."
-#kubectl port-forward efk-kibana 5601 -n $namespace
-#status=$?
-#if test $status -eq 0
-#then
-#  echo "Forwarded efk-kibana service to local host successfully in $namespace namespace"
-#else
-#  echo "Failed to forward efk-kibana service to local host!"
-#fi
