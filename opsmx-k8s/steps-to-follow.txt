@@ -91,7 +91,7 @@ Note: If you use more than three DNS server in resolve.conf. Do the update in be
 		Change : docker_dns_servers_strict: true ( to false )
 Step7: Execute the command 
 	$ ansible-playbook k8s-kubespray/kubespray-install/ssh.yml
-	$ansible-playbook k8s-kubespray/kubespray-install/haproxy/haproxy.yml
+	$ ansible-playbook k8s-kubespray/kubespray-install/haproxy/haproxy.yml
 	
 Execute Kubespraydeployment-auto.sh script and wait for completion
 	$ sudo sh k8s-kubespray/opsmx-k8s/kubespraydeplyment-auto.sh
@@ -146,7 +146,29 @@ Step12: Ingress-Controller
 	   The command, 'kubectl get svc -n ingress-nginx' can be used to know the ingress service port.
 	
 	Command: bash k8s-kubespray/Ingress-Controller/ingress-controller-setup.sh k8s-kubespray/Ingress-Controller/ingress.conf
-	
+	3. Need to update /etc/haproxy/haproxy.cfg with the port of ingress controller service.
+		$ sudo vi /etc/haproxy/haproxy.cfg
+		....
+		....
+		frontend kubernetes-ingress
+		    bind 0.0.0.0:80
+		    option tcplog
+		    mode tcp
+		    default_backend kubernetes-master-ingress
+		backend kubernetes-master-ingress
+		    mode tcp
+		    balance roundrobin
+		    option tcplog
+		    option tcp-check
+			server 10.170.0.25 10.170.0.25:30583 check fall 3 rise 2
+			server 10.170.0.26 10.170.0.26:30583 check fall 3 rise 2
+			server 10.170.0.27 10.170.0.27:30583 check fall 3 rise 2
+	  4. Restart haproxy service by following the below commands:
+	  	$ sudo systemctl status haproxy
+		$ sudo systemctl stop haproxy
+		$ sudo systemctl start haproxy
+		$ sudo systemctl status haproxy
+		
 	Steps to add ingress rules for new services to the existing ingress-controller:
 	1. Create a new ingress rule file with service name: For example:ingress-efk.yaml
 	2. Execute the command to create ingress rule for the new service: 
@@ -155,7 +177,12 @@ Step12: Ingress-Controller
 	Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Ingress-Controller
 	
 Step13: Follow spinnaker installation step and script
-Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
-Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/opsmx-spinnaker-step.txt
+	Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
+	Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/opsmx-spinnaker/opsmx-spinnaker-step.txt
+
+	Note: Add the host file /etc/hosts with haproxy public IP and service url name. 
+		eg: 234.09.56.78 deck.henco.com
+	    	234.09.56.78 gate.henco.com	    
+     		Access it in the browser : gate.henco.com
 
 
