@@ -15,6 +15,20 @@ Step 3: Once the spin-halyard pod is in Running state. The following command req
 	$ hal deploy apply
 Note : Wait until all the pods will be in Running state
 	$ kubectl -n $spinnaker_namespace get pods -w
+	$ kubectl -n $spinnaker_namespace get svc
+
+Base url override for exposing the service.
+	$ kubectl -n $spinnaker_namespace exec -it $spin_pod /bin/bash
+	$ hal config
+	$ hal config security ui edit  --override-base-url http://deck.master.com:31689
+	$ hal config
+	$ hal config security ui edit  --override-base-url http://gate.master.com:31689
+	$ hal config
+	$ hal deploy apply
+
+Note : Wait until deck and gate pod will be in Running state
+	$ kubectl -n $spinnaker_namespace get pods -w
+	$ kubectl -n $spinnaker_namespace get svc
 
 Step 3: Run the following commands if you would like to expose outside using NodePort 
   $ kubectl get svc -n $spinnaker_namespace -o wide
@@ -28,3 +42,9 @@ Step 3: Run the following commands if you would like to expose outside using Nod
 Step 3: Spinnaker can be accessed through ingress controller. 
  The rules will be updated in k8s-kubespray/blob/master/Ingress-Controller/ingress-rules.yaml 
  	
+Note: 
+	Add the host file /etc/hosts with haproxy public IP and service url name. 
+	eg: 234.09.56.78 deck.henco.com
+	    234.09.56.78 gate.henco.com
+	    
+      Access it in the browser : gate.henco.com
