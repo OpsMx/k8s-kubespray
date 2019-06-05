@@ -145,7 +145,14 @@ Step12: Ingress-Controller
 	2. After installation, update '/etc/haproxy/haproxy.cfg' file in the launch machine with ingress service port.
 	   The command, 'kubectl get svc -n ingress-nginx' can be used to know the ingress service port.
 	
-	Command: bash k8s-kubespray/Ingress-Controller/ingress-controller-setup.sh k8s-kubespray/Ingress-Controller/ingress.conf	
+	Command: bash k8s-kubespray/Ingress-Controller/ingress-controller-setup.sh k8s-kubespray/Ingress-Controller/ingress.conf
+	
+	Steps to add ingress rules for new services to the existing ingress-controller:
+	1. Create a new ingress rule file with service name: For example:ingress-efk.yaml
+	2. Execute the command to create ingress rule for the new service: 
+		$ kubectl create -f <Ingress-Controller Path>/ingress-rules.yaml -n <namespace>
+		The namespace is the name of the namespace where the specific service is running.
+	Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Ingress-Controller
 	
 Step13: Follow spinnaker installation step and script
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/opsmx-k8s/opsmx-spinnaker 
