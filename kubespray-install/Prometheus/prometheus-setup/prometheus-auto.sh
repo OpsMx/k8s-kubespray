@@ -1,4 +1,6 @@
 #!/bin/bash
+#### Organization : OpsMX
+#### Author : Vijayendar Reddy D
 
 echo "installing Prometheus locally ..."
 namespace="monitoring"
