@@ -1,4 +1,7 @@
 #!/bin/bash
+#### Organization : OpsMX
+#### Author : Vijayendar Reddy D
+
 if [ "${1}" = "h" ] || [ $# -lt 1 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]
 then
 	echo "Usage: bash ingress-cotroller-setup.sh ingress.conf"
