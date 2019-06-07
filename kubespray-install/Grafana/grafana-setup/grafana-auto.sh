@@ -1,4 +1,7 @@
 #!/bin/bash
+#### Organization : OpsMX
+#### Author : Vijayendar Reddy D
+
 echo "installing Grafana locally ..."
 #echo "Enter the namespace"
 #read -r namespace
