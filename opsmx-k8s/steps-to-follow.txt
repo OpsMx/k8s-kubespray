@@ -104,7 +104,7 @@ https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/nfs-auto.sh
 
 Step9: Execute efk-installer.sh script and wait for completion
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/kubespray-install/efk/efk-installer.sh
-	$ bash k8s-kubespray/kubespray-install/efk/efk-installer.sh
+	$ sudo bash k8s-kubespray/kubespray-install/efk/efk-installer.sh
 
 Step10: Prometheous installtion
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Prometheus/prometheus-setup
@@ -168,6 +168,11 @@ Step12: Ingress-Controller
 		$ sudo systemctl stop haproxy
 		$ sudo systemctl start haproxy
 		$ sudo systemctl status haproxy
+	  5. Add the host file /etc/hosts with haproxy public IP and service url name. 
+		eg: 	
+			34.94.25.77 prometheus.opsmx.com
+			34.94.25.77 grafana.opsmx.com
+			34.94.25.77 efk.opsmx.com
 		
 	Steps to add ingress rules for new services to the existing ingress-controller:
 	1. Create a new ingress rule file with service name: For example:ingress-efk.yaml
