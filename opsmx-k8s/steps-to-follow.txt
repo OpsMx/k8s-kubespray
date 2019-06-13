@@ -103,11 +103,11 @@ https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/nfs-auto.sh
 	$ sudo bash k8s-kubespray/opsmx-k8s/nfs-auto.sh
 
 Step9: Execute efk-installer.sh script and wait for completion
-Source: https://github.com/OpsMx/k8s-kubespray/blob/master/kubespray-install/efk/efk-installer.sh
-	$ sudo bash k8s-kubespray/kubespray-install/efk/efk-installer.sh
+Source: https://github.com/OpsMx/k8s-kubespray/blob/master/efk/efk-installer.sh
+	$ sudo bash k8s-kubespray/efk/efk-installer.sh
 
 Step10: Prometheous installtion
-Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Prometheus/prometheus-setup
+Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Prometheus/prometheus-setup
 Scripts:
 	1. prometheus-auto.sh (Executable file)
 	2. clusterRole.yml
@@ -121,16 +121,16 @@ Note:
 		  static_configs:
 			- targets: ['x.x.x.x:9100'] -- update x.x.x.x with cluster private IPs
 Command:
-	$ bash k8s-kubespray/kubespray-install/Prometheus/prometheus-setup/prometheus-auto.sh
+	$ bash k8s-kubespray/Prometheus/prometheus-setup/prometheus-auto.sh
 	
 Step11: Grafana
-Source: https://github.com/OpsMx/k8s-kubespray/tree/master/kubespray-install/Grafana/grafana-setup
+Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Grafana/grafana-setup
 Scripts:
 	1. grafana-auto.sh (Executable file)
 	2. grafana-deployment.yml
 	3. grafana-service.yml
 Command: 
-	$ bash k8s-kubespray/kubespray-install/Grafana/grafana-setup/grafana-auto.sh	
+	$ bash k8s-kubespray/Grafana/grafana-setup/grafana-auto.sh	
 	
 Step12: Ingress-Controller
 	Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Ingress-Controller
