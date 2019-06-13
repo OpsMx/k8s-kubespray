@@ -6,7 +6,7 @@ echo "installing Grafana locally ..."
 #echo "Enter the namespace"
 #read -r namespace
 namespace="monitoring"
-graf_path="k8s-kubespray/kubespray-install/Grafana/grafana-setup/"
+graf_path="k8s-kubespray/Grafana/grafana-setup/"
 
 echo "Started installing Grafana in $namespace"
 kubectl create namespace $namespace

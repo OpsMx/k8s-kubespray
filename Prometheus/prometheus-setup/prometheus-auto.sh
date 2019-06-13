@@ -4,7 +4,7 @@
 
 echo "installing Prometheus locally ..."
 namespace="monitoring"
-prom_path="k8s-kubespray/kubespray-install/Prometheus/prometheus-setup/"
+prom_path="k8s-kubespray/Prometheus/prometheus-setup/"
 
 echo "Started installing Prometheus in $namespace"
 kubectl create namespace $namespace
