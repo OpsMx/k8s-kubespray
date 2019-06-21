@@ -26,6 +26,16 @@ echo " ********* Started installing Master Prometheus ********* "
 dos2unix "$1"
 read_inputs $1
 
+# Validating the inputs
+if [ -z "$slave1src" ]; then
+  echo "The source name/IP of Slave1 is empty! Please specify the valid source name/IP for Slave1 in prometheus-master.ini and try again!"
+  exit 0
+fi
+if [ -z "$slave1port" ]; then
+  echo "The Port is empty! Please specify the valid port of the Slave1 in prometheus-master.ini and try again!"
+  exit 0
+fi
+
 # Create a user, and use the --no-create-home and --shell /bin/false options so that these users can't log into the server.
 echo " ******* Creating 'prometheus' user ******** "
 sudo useradd --no-create-home --shell /bin/false prometheus
@@ -70,7 +80,7 @@ sudo systemctl daemon-reload
 status=$?
 if test $status -eq 0
 then
-  echo " ********* Reloaded systemd init system successfully *********"
+  echo " ********* Reloaded systemd successfully *********"
 fi
 # Start Prometheus as a service
 sudo systemctl start prometheus
