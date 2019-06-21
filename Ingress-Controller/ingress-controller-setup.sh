@@ -41,7 +41,7 @@ fi
 
 echo " ******** Started updating of template yaml files ... ******** "
 sed -e "s#@NAMESPACE@#${name_space}#g" $src_space/service-nodeport.yaml.temp > $src_space/service-nodeport.yaml
-sed -e "s#@NAMESPACE@#${name_space}#g" $src_space/mandatory.yaml.temp > $src_space./mandatory.yaml
+sed -e "s#@NAMESPACE@#${name_space}#g" $src_space/mandatory.yaml.temp > $src_space/mandatory.yaml
 echo " ******** Completed the updating of template yaml files ******** "
 
 echo " ******** Creating the ingress controller service ... ******** "
