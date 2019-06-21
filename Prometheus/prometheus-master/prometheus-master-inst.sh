@@ -70,7 +70,7 @@ sudo systemctl daemon-reload
 status=$?
 if test $status -eq 0
 then
-  echo " ********* Reloaded systemd successfully *********"
+  echo " ********* Reloaded systemd init system successfully *********"
 fi
 # Start Prometheus as a service
 sudo systemctl start prometheus
