@@ -1,41 +1,5 @@
 #!/bin/bash
 
-if [ "${1}" = "h" ] || [ $# -lt 1 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]
-then
-  echo "Usage: bash prometheus-master-inst.sh prometheus-master.ini"
-  exit 0
-fi
-clear
-
-dos2unix "$1"
-read_inputs()
-{
-  echo " ******** Started reading input values from $1..."
-  file="$1"
-  while IFS="=" read -r key value; do
-    case "$key" in
-      '#'*) ;;
-      "SLAVE1_SOURCE") slave1src="$value" ;;
-      "SLAVE1_PORT") slave1port="$value" ;;
-    esac
-  done < "$file"
-  echo " ******** Completed reading of input values from $1 ******** "
-}
-
-echo " ********* Started installing Master Prometheus ********* "
-dos2unix "$1"
-read_inputs $1
-
-# Validating the inputs
-if [ -z "$slave1src" ]; then
-  echo "The source name/IP of Slave1 is empty! Please specify the valid source name/IP for Slave1 in prometheus-master.ini and try again!"
-  exit 0
-fi
-if [ -z "$slave1port" ]; then
-  echo "The Port is empty! Please specify the valid port of the Slave1 in prometheus-master.ini and try again!"
-  exit 0
-fi
-
 # Create a user, and use the --no-create-home and --shell /bin/false options so that these users can't log into the server.
 echo " ******* Creating 'prometheus' user ******** "
 sudo useradd --no-create-home --shell /bin/false prometheus
@@ -67,8 +31,6 @@ sudo cp -r prometheus-2.10.0.linux-amd64/console_libraries /etc/prometheus
 echo " ******* Setting the user and group ownership on the directories to the prometheus user ********"
 sudo chown -R prometheus:prometheus /etc/prometheus/consoles
 sudo chown -R prometheus:prometheus /etc/prometheus/console_libraries
-echo " ******** Updating 'prometheus.yml' file with source and port details of Slave Promeheus ********"
-sed -e "s#@SLAVE1SRC@#${slave1src}#g" -e "s#@SLAVE1PORT@#${slave1port}#g" ./prometheus.yml.temp > ./prometheus.yml
 # Copy the prometheus.yml to /etc/prometheus/
 echo " ******** Copying the updated prometheus.yml to /etc/prometheus/ ********"
 sudo cp ./prometheus.yml /etc/prometheus/

@@ -19,4 +19,5 @@ scrape_configs:
         - '{__name__=~"job:.*"}'
     static_configs:
       - targets:
-        - '@SLAVE1SRC@:@SLAVE1PORT@'
+        - 'X.X.X.X:30902'
+        - 'X.X.X.X:30000'
