@@ -3,6 +3,8 @@
 # Create a user, and use the --no-create-home and --shell /bin/false options so that these users can't log into the server.
 echo " ******* Creating 'prometheus' user ******** "
 sudo useradd --no-create-home --shell /bin/false prometheus
+echo " ******* Granting Administrative Privileges to 'prometheus' user"
+sudo usermod -aG sudo prometheus
 # Create the necessary directories for storing Prometheus' files and data.
 echo " ******* Creating the necessary directories for storing Prometheus files and data ********" 
 sudo mkdir /etc/prometheus
