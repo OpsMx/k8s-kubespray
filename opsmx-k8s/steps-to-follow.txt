@@ -121,7 +121,7 @@ Note:
 		  static_configs:
 			- targets: ['x.x.x.x:9100'] -- update x.x.x.x with cluster private IPs
 Command:
-	$ bash k8s-kubespray/Prometheus/prometheus-setup/prometheus-auto.sh
+	$ bash k8s-kubespray/Prometheus/prometheus-setup/prometheus-auto.sh k8s-kubespray/Prometheus/prometheus-setup/prometheus.ini
 	
 Step11: Grafana
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Grafana/grafana-setup
