@@ -34,7 +34,7 @@ Step2: Do git clone opsmx git repo
 Execute command : git clone https://github.com/OpsMx/k8s-kubespray
 
 Step3: Execute kubesprayenv.sh script in launch machine then check setting into virtualenv for ansible setup
-Note: update node lists with Private IPs of masters and worker nodes
+Note: update node lists with Private IPs of masters and worker nodes in kubesprayenv.sh
 	$ sudo bash k8s-kubespray/opsmx-k8s/kubesprayenv.sh
 Source: https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/kubesprayenv.sh
 Setup Virtual environment to execute ansible
