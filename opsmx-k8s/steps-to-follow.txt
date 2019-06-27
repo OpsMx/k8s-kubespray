@@ -110,9 +110,9 @@ Step10: Prometheous installtion
 Source: https://github.com/OpsMx/k8s-kubespray/tree/master/Prometheus/prometheus-setup
 Scripts:
 	1. prometheus-auto.sh (Executable file)
-	2. clusterRole.yml
-	3. config-map.yml
-	4. prometheus-deployment.yml
+	2. clusterRole.yml.temp
+	3. config-map.yml.temp
+	4. prometheus-deployment.yml.temp
 	5. prometheus-service.yml
 	6. prometheus.ini
 Note: 
