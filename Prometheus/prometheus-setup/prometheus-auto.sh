@@ -47,8 +47,8 @@ else
 fi
 
 echo " ******** Updating 'clusterRole.yml' file with with the given namespace ********"
-sed -e "s#@NAMESPACE@#${namespace}#g" ./clusterRole.yml.temp > ./clusterRole.yml
-sleep 5
+sed -e "s#@NAMESPACE@#${namespace}#g" $prom_path/clusterRole.yml.temp > $prom_path/clusterRole.yml
+sleep 3
 
 # Create the role using the following command
 kubectl create -f "$prom_path"/clusterRole.yml
@@ -64,8 +64,8 @@ else
 fi
 
 echo " ******** Updating 'config-map.yml' file with with the given namespace ********"
-sed -e "s#@NAMESPACE@#${namespace}#g" ./config-map.yml.temp > ./config-map.yml
-sleep 5
+sed -e "s#@NAMESPACE@#${namespace}#g" $prom_path/config-map.yml.temp > $prom_path/config-map.yml
+sleep 3
 
 # Create a file called 'config-map.yml' and execute the following command to create the config map in kubernetes.
 echo "Started creating ConfigMap in the name-space $namespace"
@@ -79,8 +79,8 @@ else
 fi
 
 echo " ******** Updating 'prometheus-deployment.yml' file with with the given namespace ********"
-sed -e "s#@NAMESPACE@#${namespace}#g" ./prometheus-deployment.yml.temp > ./prometheus-deployment.yml
-sleep 5
+sed -e "s#@NAMESPACE@#${namespace}#g" $prom_path/prometheus-deployment.yml.temp > $prom_path/prometheus-deployment.yml
+sleep 3
 # Create a deployment on monitoring namespace.
 echo "Started creating Deployment in the name-space $namespace"
 kubectl create -f "$prom_path"/prometheus-deployment.yml --namespace=$namespace
