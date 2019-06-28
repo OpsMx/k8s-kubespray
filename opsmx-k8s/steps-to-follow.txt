@@ -117,7 +117,7 @@ Scripts:
 	6. prometheus.ini
 Note: 
 	1. Create a new inventory file 'k8s-hosts' with the hostnames of master and minion nodes.
-	2. Update 'config-map.yml' with the below entry for all the nodes:
+	2. Update 'config-map.yml.temp' with the below entry for all the nodes:
 		- job_name: 'node1'
 		  static_configs:
 			- targets: ['x.x.x.x:9100'] -- update x.x.x.x with cluster private IPs
