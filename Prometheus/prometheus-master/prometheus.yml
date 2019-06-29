@@ -11,8 +11,9 @@ scrape_configs:
     params:
       'match[]':
         - '{job="prometheus"}'
+        - '{__name__=~".+"}'
         - '{__name__=~"job:.*"}'
     static_configs:
       - targets:
-        - 'X.X.X.X:30902'
-        - 'X.X.X.X:30000'
+        - '35.246.113.12:30000'
+        - '35.198.102.53:30000'
