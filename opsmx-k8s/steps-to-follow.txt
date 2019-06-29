@@ -199,11 +199,11 @@ Step14: Installation of Master Prometheus
 		2. prometheus.yml
 		3. prometheus.service		
 	Pre-requisites:
-		1. Update 'prometheus.yml' with the slave Prometheus source details:
+		1. Update 'prometheus.yml' with the slave Prometheus source details(Replace X.X.X.X with IPs and YYYYY with Ports):
 		   static_configs:
 		     - targets:
-		       - 'X.X.X.X:30902'
-		       - 'X.X.X.X:30000'
+		       - 'X.X.X.X:YYYYY'
+		       - 'X.X.X.X:YYYYY'
 	Script usage:
 		$ bash prometheus-master-inst.sh
 		 
