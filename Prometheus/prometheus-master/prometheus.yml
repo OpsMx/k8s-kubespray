@@ -15,5 +15,5 @@ scrape_configs:
         - '{__name__=~"job:.*"}'
     static_configs:
       - targets:
-        - '35.246.113.12:30000'
-        - '35.198.102.53:30000'
+        - 'X.X.X.X:YYYYY'
+        - 'X.X.X.X:YYYYY'
