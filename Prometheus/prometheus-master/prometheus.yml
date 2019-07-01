@@ -13,7 +13,7 @@ scrape_configs:
         - '{job="prometheus"}'
         - '{job="node"}'
         - '{__name__=~".+"}'
-        - '{__name__=~"job:.*"}'
+        - '{__name__=~"^job:.*"}'
     static_configs:
       - targets:
         - 'X.X.X.X:YYYYY'
