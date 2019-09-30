@@ -106,7 +106,7 @@ The host name or IP address of the NFS server.
 The reclaim policy for the PV. This defines what happens to a volume when released from its claim. Valid options are Retain (default) and Recycle. 
 
 To create run this command
-$ create -f nfs-pv.yaml
+$ kubectl create -f nfs-pv.yaml
 persistentvolume "pv0001" created
 
 To verify
