@@ -1,0 +1,116 @@
+
+NFS configuration in Kubernetes
+
+1. Benefits of NFS
+NFS allows local access to remote files.
+It uses standard client/server architecture for file sharing between all unix/Linux based machines.
+With NFS, it is not necessary that both machines run on the same Operating System.
+With the help of NFS we can configure centralized storage solutions.
+Users get their data irrespective of physical location.
+No manual refresh needed for new files.
+Newer version of NFS also supports acl, pseudo root mounts.
+Can be secured with Firewalls and Kerberos.
+
+2.NFS Services
+Its a System V-launched service. The NFS server package includes three facilities, included in the portmap and nfs-utils packages.
+portmap : It maps calls made from other machines to the correct RPC service (not required with NFSv4).
+nfs: It translates remote file sharing requests into requests on the local file system.
+rpc.mountd: This service is responsible for mounting and unmounting of file systems.
+
+3.Important Files for NFS Configuration
+/etc/exports : Its a main configuration file of NFS, all exported files and directories are defined in this file at the NFS Server end.
+/etc/fstab : To mount an NFS directory on your system across reboots, we need to make an entry in /etc/fstab.
+/etc/sysconfig/nfs : Configuration file of NFS to control on which port rpc and other services are listening.
+
+
+4.Setup and Configure NFS Mounts on Linux Server
+To setup NFS mounts, we’ll be needing at least two Linux/Unix machines. Here in this tutorial, I’ll be using two servers.
+NFS Server
+NFS Client 
+
+5.Installing NFS Server and NFS Client
+We need to install NFS packages on our NFS Server as well as on NFS Client machine. We can install it via “yum” (Red Hat Linux) and “apt-get” (Debian and Ubuntu) package installers.
+
+
+
+6. NFS Options
+Some other options we can use in “/etc/exports” file for file sharing is as follows.
+
+ro: With the help of this option we can provide read only access to the shared files i.e client will only be able to read.
+rw: This option allows the client server to both read and write access within the shared directory.
+sync: Sync confirms requests to the shared directory only once the changes have been committed.
+no_subtree_check: This option prevents the subtree checking. When a shared directory is a subdirectory of a larger file system, nfs performs scans of every directory above it, in order to verify its permissions and details. Disabling the subtree check may increase the reliability of NFS, but reduce security.
+no_root_squash: This phrase allows root to connect to the designated directory.
+For more options with “/etc/exports“, you are recommended to read the man pages for export.
+
+7. Setting Up the NFS Client
+After configuring the NFS server, we need to mount that shared directory or partition in the client server.
+
+8. Mount Shared Directories on NFS Client
+Now at the NFS client end, we need to mount that directory in our server to access it locally. To do so, first we need to find out that shares available on the remote server or NFS Server.
+
+9. Mount Shared NFS Directory
+To mount that shared NFS directory we can use following mount command.
+mount -t nfs IP:/nfsshare /mnt/nfsshare
+
+10. NFS configuration is K8s cluster.
+In our environment we have created automated script for NFS configuration and the script path 
+https://github.com/OpsMx/k8s-kubespray/blob/master/opsmx-k8s/nfs-auto.sh
+
+Then execute the script in the cluster either NFS server or remote machine.
+Execute nfs-auto.sh script and wait for completion
+
+Note: For multiple client/worker need to update node_list in nfs-auto.sh
+
+	$ sudo bash k8s-kubespray/opsmx-k8s/nfs-auto.sh
+
+The script will install helm and nfs-client provisioning for the cluster.
+
+
+
+11. Some more important commands for NFS.
+
+showmount -e : Shows the available shares on your local machine
+showmount -e <server-ip or hostname>: Lists the available shares at the remote server
+showmount -d : Lists all the sub directories
+exportfs -v : Displays a list of shares files and options on a server
+exportfs -a : Exports all shares listed in /etc/exports, or given name
+exportfs -u : Unexports all shares listed in /etc/exports, or given name
+exportfs -r : Refresh the server’s list after modifying /etc/exports
+
+12. Creating Persistent Volumes:
+
+After executing the script. The following steps are required for PV creation with yaml file. For example nfs-pv.yaml
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0001 
+spec:
+  capacity:
+    storage: 5Gi 
+  accessModes:
+  - ReadWriteOnce 
+  nfs: 
+    path: /tmp 
+    server: server_IP
+  persistentVolumeReclaimPolicy: Recycle 
+
+Components in the yaml file:
+The name of the volume. This is the PV identity in various kubectl.
+The amount of storage allocated to this volume.
+Though this appears to be related to controlling access to the volume, it is actually used similarly to labels and used to match a PVC to a PV. Currently, no access rules are enforced based on the accessModes.
+The volume type being used, in this case the nfs plug-in.
+The path that is exported by the NFS server.
+The host name or IP address of the NFS server.
+The reclaim policy for the PV. This defines what happens to a volume when released from its claim. Valid options are Retain (default) and Recycle. 
+
+To create run this command
+$ create -f nfs-pv.yaml
+persistentvolume "pv0001" created
+
+To verify
+$ kubectl get pv
+
+
+
