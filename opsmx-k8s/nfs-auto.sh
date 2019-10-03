@@ -4,10 +4,10 @@
 #### Author : M Gnana Seelan
 
 # Add the Cluster node private-IPs which are going to be NFS client
-node_list=("10.170.0.11" "10.170.0.8" "10.170.0.9")
+node_list=("X.X.X.X" "X.X.X.X" "X.X.X.X")
 nfsfolder="/home/public"
-nfs_server_ip="10.170.0.28"
-nfs_share_iprange="10.0.0.0/8"
+nfs_server_ip="X.X.X.X"
+nfs_share_iprange="X.X.X.X/x"
 
 
 # This is required to be executed for each minion node.
